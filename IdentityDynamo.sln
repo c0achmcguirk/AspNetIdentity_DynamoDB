@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElCamino.AspNet.Identity.Dynamo", "src\identity.dynamo\ElCamino.AspNet.Identity.Dynamo.csproj", "{4D341B9E-4F20-4129-B9E3-5DE5C7DB6FEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElCamino.AspNet.Identity.Dynamo.Tests", "tests\identity.dynamo.tests\ElCamino.AspNet.Identity.Dynamo.Tests.csproj", "{803030D9-4E95-4C36-8813-A35194D805EC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DADDF548-A8E8-4D29-AEA7-52D2BE0F5024}"
+	ProjectSection(SolutionItems) = preProject
+		License.txt = License.txt
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs33
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = src\\identity.dynamo\\ElCamino.AspNet.Identity.Dynamo.csproj
+		SccProjectName1 = src/identity.dynamo
+		SccLocalPath1 = src\\identity.dynamo
+		SccProjectUniqueName2 = tests\\identity.dynamo.tests\\ElCamino.AspNet.Identity.Dynamo.Tests.csproj
+		SccProjectName2 = tests/identity.dynamo.tests
+		SccLocalPath2 = tests\\identity.dynamo.tests
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Signed|Any CPU = Signed|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4D341B9E-4F20-4129-B9E3-5DE5C7DB6FEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D341B9E-4F20-4129-B9E3-5DE5C7DB6FEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D341B9E-4F20-4129-B9E3-5DE5C7DB6FEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D341B9E-4F20-4129-B9E3-5DE5C7DB6FEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D341B9E-4F20-4129-B9E3-5DE5C7DB6FEF}.Signed|Any CPU.ActiveCfg = Signed|Any CPU
+		{4D341B9E-4F20-4129-B9E3-5DE5C7DB6FEF}.Signed|Any CPU.Build.0 = Signed|Any CPU
+		{803030D9-4E95-4C36-8813-A35194D805EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{803030D9-4E95-4C36-8813-A35194D805EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{803030D9-4E95-4C36-8813-A35194D805EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{803030D9-4E95-4C36-8813-A35194D805EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{803030D9-4E95-4C36-8813-A35194D805EC}.Signed|Any CPU.ActiveCfg = Signed|Any CPU
+		{803030D9-4E95-4C36-8813-A35194D805EC}.Signed|Any CPU.Build.0 = Signed|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

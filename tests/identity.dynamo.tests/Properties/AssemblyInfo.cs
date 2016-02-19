@@ -5,12 +5,12 @@ using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("ElCamino.AspNet.Identity.Dynamo.Tests")]
+[assembly: AssemblyTitle("ElCamino.AspNet.Identity.Dynamo.Tests v2")]
 [assembly: AssemblyDescription("DynamoDB Storage Provider for ASP.NET Identity 2.0 framework tests")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Author: David Melendez, Paul Oliver")]
 [assembly: AssemblyProduct("DynamoDB Storage Provider")]
-[assembly: AssemblyCopyright("Copyright ©  2016 David Melendez, MIT License")]
+[assembly: AssemblyCopyright("Copyright ©  2016 David Melendez, Paul Oliver, MIT License")]
 [assembly: AssemblyTrademark("")]
 [assembly: NeutralResourcesLanguage("en-US")]
 

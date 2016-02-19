@@ -24,7 +24,7 @@
     <tags>ASP.NET Identity 2.2 AWS Amazon DynamoDB MVC UserStore RoleStore UserManager RoleManager multi-tenant</tags>
     <dependencies>
       <dependency id="AWSSDK.Core" version="3.1.4.5" />
-      <dependency id="AWSSDK.DynamoDBv2" version="3.1.4.5" />
+      <dependency id="AWSSDK.DynamoDBv2" version="3.1.1.4" />
       <dependency id="Microsoft.AspNet.Identity.Core" version="2.2.1" />
       <dependency id="Newtonsoft.Json" version="6.0.8" />
     </dependencies>

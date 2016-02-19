@@ -7,6 +7,14 @@ This is a fork of [David Melendez's project on CodePlex](https://identitydynamod
 
 In my project I was running into ambiguous references because David's version required me to reference `AWSSDK`.
 
+## Install from nuget.org
+
+<https://www.nuget.org/packages/ElCamino.AspNet.Identity.Dynamo.v2/>
+
+```
+PM> Install-Package ElCamino.AspNet.Identity.Dynamo.v2
+```
+
 ## Description
 
 This project provides a high performance cloud solution for ASP.NET Identity 2.0 using AWS DynamoDB replacing the Entity Framework / MSSQL provider.

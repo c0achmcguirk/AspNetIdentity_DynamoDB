@@ -139,6 +139,7 @@ ClientBin/
 *.dbmdl
 *.[Pp]ublish.xml
 *.pfx
+*.snk
 *.publishsettings
 modulesbin/
 tempbin/

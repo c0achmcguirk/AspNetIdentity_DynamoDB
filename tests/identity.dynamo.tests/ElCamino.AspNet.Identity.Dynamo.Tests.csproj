@@ -101,13 +101,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Analyzer Include="..\..\packages\AWSSDK.DynamoDBv2.3.1.1.4\analyzers\dotnet\cs\AWSSDK.DynamoDBv2.CodeAnalysis.dll" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\src\identity.dynamo\ElCamino.AspNet.Identity.Dynamo.csproj">
       <Project>{4d341b9e-4f20-4129-b9e3-5de5c7db6fef}</Project>
       <Name>ElCamino.AspNet.Identity.Dynamo</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\..\packages\AWSSDK.DynamoDBv2.3.1.1.4\analyzers\dotnet\cs\AWSSDK.DynamoDBv2.CodeAnalysis.dll" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

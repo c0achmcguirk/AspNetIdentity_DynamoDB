@@ -14,11 +14,13 @@
         Release $version$  This project is an open source plugin to ASP.NET Identity Framework using Amazon DynamoDB storage.
 
         This is an update to David Melendez's version that uses the newer version of Amazon's SDK.
+        
+        Supports RoleManager.Roles (experimental)
 
       * Adding support for dependencies
       * Updates to use newer Amazon AWSSDK.Core + AWSSDK.DynamoDBv2 libraries. Removes older AWSSDK dependency.
-      ** Microsoft.AspNet.Identity.Core 2.2
-      ** AWSSDK 2.3.23
+      * Microsoft.AspNet.Identity.Core 2.2
+      * AWSSDK 2.3.23
     </releaseNotes> 
     <copyright>Copyright 2016</copyright>
     <tags>ASP.NET Identity 2.2 AWS Amazon DynamoDB MVC UserStore RoleStore UserManager RoleManager multi-tenant</tags>

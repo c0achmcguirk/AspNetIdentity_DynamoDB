@@ -1,9 +1,9 @@
 ﻿// MIT License Copyright 2014 (c) David Melendez. All rights reserved. See License.txt in the project root for license information.
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ElCamino.AspNet.Identity.Dynamo;
-using Microsoft.AspNet.Identity;
 using ElCamino.AspNet.Identity.Dynamo.Model;
+using Microsoft.AspNet.Identity;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Linq;
 
 namespace ElCamino.AspNet.Identity.Dynamo.Tests
 {
@@ -179,11 +179,34 @@ namespace ElCamino.AspNet.Identity.Dynamo.Tests
         {
             using (RoleStore<IdentityRole> store = new RoleStore<IdentityRole>())
             {
-                try
+                string roleNew = string.Format("TestRole_{0}", Guid.NewGuid());
+                IdentityRole role;
+
+                using (RoleManager<IdentityRole> manager = new RoleManager<IdentityRole>(store))
                 {
+                    role = new IdentityRole(roleNew);
+                    var createTask = manager.CreateAsync(role);
+                    createTask.Wait();
+
+                    var findTask = manager.FindByIdAsync(role.Id);
+                    Assert.IsNotNull(findTask.Result, "Role wasn't created");
+
                     var roles = store.Roles;
+                    Assert.IsNotNull(roles);
+
+                    var foundRole = from r in roles where r.Name == roleNew select r;
+                    Assert.IsNotNull(foundRole.FirstOrDefault());
+
+                    try
+                    {
+                        var task = store.DeleteAsync(null);
+                        task.Wait();
+                    }
+                    catch (Exception ex)
+                    {
+                        Assert.IsNotNull(ex, "Argument exception not raised");
+                    }
                 }
-                catch (NotSupportedException) { }
             }
         }
 

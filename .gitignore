@@ -12,6 +12,7 @@ PublishProfiles/
 # Misc. Files
 *.ncrunchsolution
 .awspublish-cf-cdn-dev
+_PUBLISHING_TO_NUGET.md
 
 # User-specific files
 *.suo

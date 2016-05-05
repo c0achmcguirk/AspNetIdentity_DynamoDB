@@ -11,19 +11,18 @@ using ElCamino.AspNet.Identity.Dynamo.Model;
 using ElCamino.AspNet.Identity.Dynamo.Helpers;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.Model;
 
 namespace ElCamino.AspNet.Identity.Dynamo
 {
     public class RoleStore<TRole> : RoleStore<TRole, string, IdentityUserRole>, IQueryableRoleStore<TRole>, IQueryableRoleStore<TRole, string>, IRoleStore<TRole, string> where TRole : IdentityRole, new()
     {
-        public RoleStore()
-            : this(new IdentityCloudContext())
+        public RoleStore() : this(new IdentityCloudContext())
         {
             
         }
 
-        public RoleStore(IdentityCloudContext context)
-            : base(context) { }
+        public RoleStore(IdentityCloudContext context) : base(context) { }
 
         //Fixing code analysis issue CA1063
         protected override void Dispose(bool disposing)
@@ -159,14 +158,34 @@ namespace ElCamino.AspNet.Identity.Dynamo
 
         public IdentityCloudContext<IdentityUser, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim> Context { get; private set; }
 
-        /// <summary>
-        /// Changing from NotImplemented exception to NotSupported to avoid code analysis message.
-        /// </summary>
         public IQueryable<TRole> Roles
         {
             get
             {
-                throw new NotSupportedException();
+                var tableName = Context.FormatTableNameWithPrefix(Constants.TableNames.RolesTable);
+                //var attributes = Constants.
+                var result = Context.Client.Scan(new ScanRequest(tableName));
+                var retObj = new List<TRole>();
+
+                foreach (var item in result.Items)
+                {
+                    if (item.Values != null)
+                    {
+                        var query = item.AsQueryable();
+                        var id = (from r in query where r.Key == "Id" select r.Value.S).FirstOrDefault();
+                        var name = (from r in query where r.Key == "Name" select r.Value.S).FirstOrDefault();
+
+                        if (id != null && name != null)
+                        {
+                            var role = new IdentityRole(name);
+                            role.Id = id;
+
+                            retObj.Add(role as TRole);
+                        }
+                    }
+                }
+
+                return retObj.AsQueryable();
             }
         }
 

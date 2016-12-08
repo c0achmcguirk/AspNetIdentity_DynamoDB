@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://github.com/c0achmcguirk/AspNetIdentity_DynamoDB/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/c0achmcguirk/AspNetIdentity_DynamoDB</projectUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>
+        Release $version$  This project is an open source plugin to ASP.NET Identity Framework using Amazon DynamoDB storage.
+
+        This is an alpha version for .NET core. Don't use it yet. It won't work for you.
+
+        This is an update to David Melendez's version that uses the newer version of Amazon's SDK.
+        
+      * Adding support for dependencies
+      * Updates to use newer Amazon AWSSDK.Core + AWSSDK.DynamoDBv2 libraries. Removes older AWSSDK dependency.
+      * AWSSDK.Core (3.2.8-rc)
+      * AWSSDK.DynamoDBv2 (3.2.8-rc),
+    </releaseNotes> 
+    <copyright>Copyright 2016</copyright>
+    <tags>ASP.NET Core Identity 1.0 AWS Amazon DynamoDB MVC UserStore RoleStore UserManager RoleManager multi-tenant</tags>
+    <dependencies>
+      <dependency id="AWSSDK.Core" version="3.1.4.5" />
+      <dependency id="AWSSDK.DynamoDBv2" version="3.1.1.4" />
+      <dependency id="Microsoft.AspNetCore.Identity" version="1.0.0" />
+      <dependency id="Newtonsoft.Json" version="6.0.8" />
+      <dependency id="Microsoft.Extensions.DependencyInjection" version="1.0.0" />
+      <dependency id="NETStandard.Library" version="1.6.0" />
+      <dependency id="Newtonsoft.Json" version="9.0.2-beta1" />
+      <dependency id="System.Linq.Queryable" version="4.0.1" />
+      <dependency id="System.Xml.XDocument" version="4.3.0" />
+    </dependencies>
+  </metadata>
+</package>

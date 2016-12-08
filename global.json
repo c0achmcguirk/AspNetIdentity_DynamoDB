@@ -1,0 +1,12 @@
+{
+  "projects": [ "ElCamino.AspNet.Identity.Dynamo.", 
+      "ElCamino.AspNet.Identity.Dynamo.UnitTests",
+      "ElCamino.AspNet.Identity.TestAppsettings", 
+      "ElCamino.AspNetCore.Identity.Dynamo",
+      "ElCamino.AspNetCore.Identity.Dynamo.IntegrationTests",
+      "tests"
+  ],
+  "sdk": {
+    "version": "1.0.0-preview2-003131"
+  }
+}

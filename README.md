@@ -5,6 +5,7 @@ This is a fork of [David Melendez's project on CodePlex](https://identitydynamod
 * I removed the dependency on the older `AWSSDK` library.
 * I added a dependency on the newer `AWSSDK.DynamoDBv2` and `AWSSDK.Core`.
 * RoleManager.Roles lists roles in your database. It doesn't throw an UnsupportedException.
+* It now uses the AWS .NET-core friendly versions of the libraries (3.2.X-rc series)
 
 In my project I was running into ambiguous references because David's version required me to reference `AWSSDK`.
 

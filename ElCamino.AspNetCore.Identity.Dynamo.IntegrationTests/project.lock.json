@@ -1,0 +1,444 @@
+{
+  "locked": false,
+  "version": 2,
+  "targets": {
+    ".NETPortable,Version=v4.5,Profile=Profile7": {
+      "AWSSDK.Core/3.2.8-rc": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Net.Http": "2.2.29",
+          "PCLCrypto": "1.0.2.15130",
+          "PCLStorage": "1.0.2"
+        },
+        "compile": {
+          "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/AWSSDK.Core.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/AWSSDK.Core.dll": {}
+        }
+      },
+      "AWSSDK.DynamoDBv2/3.2.8-rc": {
+        "type": "package",
+        "dependencies": {
+          "AWSSDK.Core": "[3.2.8-rc, 3.3.0-rc)"
+        },
+        "compile": {
+          "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/AWSSDK.DynamoDBv2.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/AWSSDK.DynamoDBv2.dll": {}
+        }
+      },
+      "Microsoft.AspnetCore.Identity/1.1.0": {
+        "type": "package"
+      },
+      "Microsoft.Bcl/1.1.10": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Bcl.Build": "1.0.14"
+        },
+        "compile": {
+          "lib/portable-net45+win8+wpa81/_._": {}
+        },
+        "runtime": {
+          "lib/portable-net45+win8+wpa81/_._": {}
+        }
+      },
+      "Microsoft.Bcl.Build/1.0.14": {
+        "type": "package"
+      },
+      "Microsoft.Net.Http/2.2.29": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Bcl": "1.1.10",
+          "Microsoft.Bcl.Build": "1.0.14"
+        },
+        "compile": {
+          "lib/portable-net45+win8/System.Net.Http.Extensions.dll": {},
+          "lib/portable-net45+win8/System.Net.Http.Primitives.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net45+win8/System.Net.Http.Extensions.dll": {},
+          "lib/portable-net45+win8/System.Net.Http.Primitives.dll": {}
+        }
+      },
+      "PCLCrypto/1.0.2.15130": {
+        "type": "package",
+        "dependencies": {
+          "Validation": "[2.0.6, 3.0.0)"
+        },
+        "compile": {
+          "lib/portable-net40+sl50+win+wpa81+wp80+MonoAndroid10+xamarinios10+MonoTouch10/PCLCrypto.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net40+sl50+win+wpa81+wp80+MonoAndroid10+xamarinios10+MonoTouch10/PCLCrypto.dll": {}
+        }
+      },
+      "PCLStorage/1.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/portable-net45+wp8+wpa81+win8+monoandroid+monotouch+Xamarin.iOS+Xamarin.Mac/PCLStorage.Abstractions.dll": {},
+          "lib/portable-net45+wp8+wpa81+win8+monoandroid+monotouch+Xamarin.iOS+Xamarin.Mac/PCLStorage.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net45+wp8+wpa81+win8+monoandroid+monotouch+Xamarin.iOS+Xamarin.Mac/PCLStorage.Abstractions.dll": {},
+          "lib/portable-net45+wp8+wpa81+win8+monoandroid+monotouch+Xamarin.iOS+Xamarin.Mac/PCLStorage.dll": {}
+        }
+      },
+      "Validation/2.0.6.15003": {
+        "type": "package",
+        "compile": {
+          "lib/portable-net40+sl50+win+wpa81+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10/Validation.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net40+sl50+win+wpa81+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10/Validation.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "AWSSDK.Core/3.2.8-rc": {
+      "sha512": "Y9kE82hzjrFrmpdVXrMziUhi7sgMPcya4eocf/Xr17k1cBH5kCB02dwSp83G3Yyc75M6pBgg07MIXY3zg+MklA==",
+      "type": "package",
+      "path": "AWSSDK.Core/3.2.8-rc",
+      "files": [
+        "AWSSDK.Core.3.2.8-rc.nupkg.sha512",
+        "AWSSDK.Core.nuspec",
+        "lib/Xamarin.Mac20/AWSSDK.Core.XML",
+        "lib/Xamarin.Mac20/AWSSDK.Core.dll",
+        "lib/Xamarin.iOS10/AWSSDK.Core.XML",
+        "lib/Xamarin.iOS10/AWSSDK.Core.dll",
+        "lib/monoandroid/AWSSDK.Core.XML",
+        "lib/monoandroid/AWSSDK.Core.dll",
+        "lib/monoandroid/AWSSDK.Core.pdb",
+        "lib/net35/AWSSDK.Core.XML",
+        "lib/net35/AWSSDK.Core.dll",
+        "lib/net35/AWSSDK.Core.pdb",
+        "lib/net45/AWSSDK.Core.XML",
+        "lib/net45/AWSSDK.Core.dll",
+        "lib/net45/AWSSDK.Core.pdb",
+        "lib/netstandard1.3/AWSSDK.Core.dll",
+        "lib/netstandard1.3/AWSSDK.Core.pdb",
+        "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/AWSSDK.Core.XML",
+        "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/AWSSDK.Core.dll",
+        "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/AWSSDK.Core.pdb",
+        "lib/windows8/AWSSDK.Core.XML",
+        "lib/windows8/AWSSDK.Core.dll",
+        "lib/windows8/AWSSDK.Core.pdb",
+        "lib/wp8/AWSSDK.Core.XML",
+        "lib/wp8/AWSSDK.Core.dll",
+        "lib/wp8/AWSSDK.Core.pdb",
+        "lib/wpa81/AWSSDK.Core.XML",
+        "lib/wpa81/AWSSDK.Core.dll",
+        "lib/wpa81/AWSSDK.Core.pdb",
+        "tools/account-management.ps1"
+      ]
+    },
+    "AWSSDK.DynamoDBv2/3.2.8-rc": {
+      "sha512": "a0WUdFvwbYeOhZLujZf7bQKOKYJ1GbhyCKs6UGtpb/4j0Jz3k48MR7Hum4dc0nyW1h7uqltRyiAYBA4a3Y/SPw==",
+      "type": "package",
+      "path": "AWSSDK.DynamoDBv2/3.2.8-rc",
+      "files": [
+        "AWSSDK.DynamoDBv2.3.2.8-rc.nupkg.sha512",
+        "AWSSDK.DynamoDBv2.nuspec",
+        "analyzers/dotnet/cs/AWSSDK.DynamoDBv2.CodeAnalysis.dll",
+        "lib/net35/AWSSDK.DynamoDBv2.XML",
+        "lib/net35/AWSSDK.DynamoDBv2.dll",
+        "lib/net35/AWSSDK.DynamoDBv2.pdb",
+        "lib/net45/AWSSDK.DynamoDBv2.XML",
+        "lib/net45/AWSSDK.DynamoDBv2.dll",
+        "lib/net45/AWSSDK.DynamoDBv2.pdb",
+        "lib/netstandard1.3/AWSSDK.DynamoDBv2.dll",
+        "lib/netstandard1.3/AWSSDK.DynamoDBv2.pdb",
+        "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/AWSSDK.DynamoDBv2.XML",
+        "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/AWSSDK.DynamoDBv2.dll",
+        "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/AWSSDK.DynamoDBv2.pdb",
+        "tools/install.ps1",
+        "tools/uninstall.ps1"
+      ]
+    },
+    "Microsoft.AspnetCore.Identity/1.1.0": {
+      "sha512": "M2W5Y0Nd1GLY0M4TYph6zptPp7dhdrMALx1CP4g8iCU5G148j2rRTwMd3o5699+8M8Brtx5cOGiSThadVFKMuQ==",
+      "type": "package",
+      "path": "Microsoft.AspnetCore.Identity/1.1.0",
+      "files": [
+        "Microsoft.AspNetCore.Identity.1.1.0.nupkg.sha512",
+        "Microsoft.AspNetCore.Identity.nuspec",
+        "lib/net451/Microsoft.AspNetCore.Identity.dll",
+        "lib/net451/Microsoft.AspNetCore.Identity.xml",
+        "lib/netstandard1.3/Microsoft.AspNetCore.Identity.dll",
+        "lib/netstandard1.3/Microsoft.AspNetCore.Identity.xml"
+      ]
+    },
+    "Microsoft.Bcl/1.1.10": {
+      "sha512": "+tTqoh/M1pyL8El3qLy30EcwnAtyvFoDZJtdG9Cbg/WdFbh4N8kyrq198XHuEL7lnJbeD0DRO8jcX5IIOh05cQ==",
+      "type": "package",
+      "path": "Microsoft.Bcl/1.1.10",
+      "files": [
+        "License-Stable.rtf",
+        "Microsoft.Bcl.1.1.10.nupkg.sha512",
+        "Microsoft.Bcl.nuspec",
+        "lib/Xamarin.iOS10/_._",
+        "lib/monoandroid/_._",
+        "lib/monotouch/_._",
+        "lib/net40/System.IO.dll",
+        "lib/net40/System.IO.xml",
+        "lib/net40/System.Runtime.dll",
+        "lib/net40/System.Runtime.xml",
+        "lib/net40/System.Threading.Tasks.dll",
+        "lib/net40/System.Threading.Tasks.xml",
+        "lib/net40/ensureRedirect.xml",
+        "lib/net45/_._",
+        "lib/portable-net40+sl4+win8+wp71+wpa81/System.IO.dll",
+        "lib/portable-net40+sl4+win8+wp71+wpa81/System.IO.xml",
+        "lib/portable-net40+sl4+win8+wp71+wpa81/System.Runtime.dll",
+        "lib/portable-net40+sl4+win8+wp71+wpa81/System.Runtime.xml",
+        "lib/portable-net40+sl4+win8+wp71+wpa81/System.Threading.Tasks.dll",
+        "lib/portable-net40+sl4+win8+wp71+wpa81/System.Threading.Tasks.xml",
+        "lib/portable-net40+sl4+win8+wp71+wpa81/ensureRedirect.xml",
+        "lib/portable-net40+sl4+win8+wp8+wpa81/System.IO.dll",
+        "lib/portable-net40+sl4+win8+wp8+wpa81/System.IO.xml",
+        "lib/portable-net40+sl4+win8+wp8+wpa81/System.Runtime.dll",
+        "lib/portable-net40+sl4+win8+wp8+wpa81/System.Runtime.xml",
+        "lib/portable-net40+sl4+win8+wp8+wpa81/System.Threading.Tasks.dll",
+        "lib/portable-net40+sl4+win8+wp8+wpa81/System.Threading.Tasks.xml",
+        "lib/portable-net40+sl4+win8+wp8+wpa81/ensureRedirect.xml",
+        "lib/portable-net40+sl4+win8/System.IO.dll",
+        "lib/portable-net40+sl4+win8/System.IO.xml",
+        "lib/portable-net40+sl4+win8/System.Runtime.dll",
+        "lib/portable-net40+sl4+win8/System.Runtime.xml",
+        "lib/portable-net40+sl4+win8/System.Threading.Tasks.dll",
+        "lib/portable-net40+sl4+win8/System.Threading.Tasks.xml",
+        "lib/portable-net40+sl4+win8/ensureRedirect.xml",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/System.IO.dll",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/System.IO.xml",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/System.Runtime.dll",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/System.Runtime.xml",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/System.Threading.Tasks.dll",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/System.Threading.Tasks.xml",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/ensureRedirect.xml",
+        "lib/portable-net40+win8+wp8+wpa81/System.IO.dll",
+        "lib/portable-net40+win8+wp8+wpa81/System.IO.xml",
+        "lib/portable-net40+win8+wp8+wpa81/System.Runtime.dll",
+        "lib/portable-net40+win8+wp8+wpa81/System.Runtime.xml",
+        "lib/portable-net40+win8+wp8+wpa81/System.Threading.Tasks.dll",
+        "lib/portable-net40+win8+wp8+wpa81/System.Threading.Tasks.xml",
+        "lib/portable-net40+win8+wp8+wpa81/ensureRedirect.xml",
+        "lib/portable-net40+win8/System.IO.dll",
+        "lib/portable-net40+win8/System.IO.xml",
+        "lib/portable-net40+win8/System.Runtime.dll",
+        "lib/portable-net40+win8/System.Runtime.xml",
+        "lib/portable-net40+win8/System.Threading.Tasks.dll",
+        "lib/portable-net40+win8/System.Threading.Tasks.xml",
+        "lib/portable-net40+win8/ensureRedirect.xml",
+        "lib/portable-net45+win8+wp8+wpa81/_._",
+        "lib/portable-net45+win8+wpa81/_._",
+        "lib/portable-net451+win81+wpa81/_._",
+        "lib/portable-net451+win81/_._",
+        "lib/portable-win81+wp81+wpa81/_._",
+        "lib/sl4-windowsphone71/System.IO.dll",
+        "lib/sl4-windowsphone71/System.IO.xml",
+        "lib/sl4-windowsphone71/System.Runtime.dll",
+        "lib/sl4-windowsphone71/System.Runtime.xml",
+        "lib/sl4-windowsphone71/System.Threading.Tasks.dll",
+        "lib/sl4-windowsphone71/System.Threading.Tasks.xml",
+        "lib/sl4-windowsphone71/ensureRedirect.xml",
+        "lib/sl4/System.IO.dll",
+        "lib/sl4/System.IO.xml",
+        "lib/sl4/System.Runtime.dll",
+        "lib/sl4/System.Runtime.xml",
+        "lib/sl4/System.Threading.Tasks.dll",
+        "lib/sl4/System.Threading.Tasks.xml",
+        "lib/sl5/System.IO.dll",
+        "lib/sl5/System.IO.xml",
+        "lib/sl5/System.Runtime.dll",
+        "lib/sl5/System.Runtime.xml",
+        "lib/sl5/System.Threading.Tasks.dll",
+        "lib/sl5/System.Threading.Tasks.xml",
+        "lib/win8/_._",
+        "lib/wp8/_._",
+        "lib/wpa81/_._"
+      ]
+    },
+    "Microsoft.Bcl.Build/1.0.14": {
+      "sha512": "cDLKSvNvRa519hplsbSoYqO69TjdDIhfjtKUM0g20/nVROoWsGav9KCI9HtnGjLmdV1+TcUUDhbotcllibjPEA==",
+      "type": "package",
+      "path": "Microsoft.Bcl.Build/1.0.14",
+      "files": [
+        "License-Stable.rtf",
+        "Microsoft.Bcl.Build.1.0.14.nupkg.sha512",
+        "Microsoft.Bcl.Build.nuspec",
+        "content/net40/_._",
+        "content/netcore45/_._",
+        "content/portable-net40+win8+sl4+wp71+wpa81/_._",
+        "content/sl4-windowsphone71/_._",
+        "content/sl4/_._",
+        "tools/Install.ps1",
+        "tools/Microsoft.Bcl.Build.Tasks.dll",
+        "tools/Microsoft.Bcl.Build.targets",
+        "tools/Uninstall.ps1"
+      ]
+    },
+    "Microsoft.Net.Http/2.2.29": {
+      "sha512": "fc4CPEewJ30Xgal+fSq1lYIBt582A7eKlAL7O4HXiYAiTp2VTnA4osSvk7T2n8aS4xTCPVJusQk3yKLT0XSpkg==",
+      "type": "package",
+      "path": "Microsoft.Net.Http/2.2.29",
+      "files": [
+        "License-Stable.rtf",
+        "Microsoft.Net.Http.2.2.29.nupkg.sha512",
+        "Microsoft.Net.Http.nuspec",
+        "lib/Xamarin.iOS10/System.Net.Http.Extensions.XML",
+        "lib/Xamarin.iOS10/System.Net.Http.Extensions.dll",
+        "lib/Xamarin.iOS10/System.Net.Http.Primitives.dll",
+        "lib/Xamarin.iOS10/System.Net.Http.Primitives.xml",
+        "lib/monoandroid/System.Net.Http.Extensions.XML",
+        "lib/monoandroid/System.Net.Http.Extensions.dll",
+        "lib/monoandroid/System.Net.Http.Primitives.dll",
+        "lib/monoandroid/System.Net.Http.Primitives.xml",
+        "lib/monotouch/System.Net.Http.Extensions.XML",
+        "lib/monotouch/System.Net.Http.Extensions.dll",
+        "lib/monotouch/System.Net.Http.Primitives.dll",
+        "lib/monotouch/System.Net.Http.Primitives.xml",
+        "lib/net40/System.Net.Http.Extensions.XML",
+        "lib/net40/System.Net.Http.Extensions.dll",
+        "lib/net40/System.Net.Http.Primitives.dll",
+        "lib/net40/System.Net.Http.Primitives.xml",
+        "lib/net40/System.Net.Http.WebRequest.dll",
+        "lib/net40/System.Net.Http.WebRequest.xml",
+        "lib/net40/System.Net.Http.dll",
+        "lib/net40/System.Net.Http.xml",
+        "lib/net40/ensureRedirect.xml",
+        "lib/net45/System.Net.Http.Extensions.XML",
+        "lib/net45/System.Net.Http.Extensions.dll",
+        "lib/net45/System.Net.Http.Primitives.dll",
+        "lib/net45/System.Net.Http.Primitives.xml",
+        "lib/net45/ensureRedirect.xml",
+        "lib/portable-net40+sl4+win8+wp71+wpa81/System.Net.Http.Extensions.XML",
+        "lib/portable-net40+sl4+win8+wp71+wpa81/System.Net.Http.Extensions.dll",
+        "lib/portable-net40+sl4+win8+wp71+wpa81/System.Net.Http.Primitives.XML",
+        "lib/portable-net40+sl4+win8+wp71+wpa81/System.Net.Http.Primitives.dll",
+        "lib/portable-net40+sl4+win8+wp71+wpa81/System.Net.Http.dll",
+        "lib/portable-net40+sl4+win8+wp71+wpa81/System.Net.Http.xml",
+        "lib/portable-net40+sl4+win8+wp71+wpa81/ensureRedirect.xml",
+        "lib/portable-net45+win8+wpa81/System.Net.Http.Extensions.XML",
+        "lib/portable-net45+win8+wpa81/System.Net.Http.Extensions.dll",
+        "lib/portable-net45+win8+wpa81/System.Net.Http.Primitives.dll",
+        "lib/portable-net45+win8+wpa81/System.Net.Http.Primitives.xml",
+        "lib/portable-net45+win8+wpa81/ensureRedirect.xml",
+        "lib/portable-net45+win8/System.Net.Http.Extensions.XML",
+        "lib/portable-net45+win8/System.Net.Http.Extensions.dll",
+        "lib/portable-net45+win8/System.Net.Http.Primitives.dll",
+        "lib/portable-net45+win8/System.Net.Http.Primitives.xml",
+        "lib/portable-net45+win8/ensureRedirect.xml",
+        "lib/sl4-windowsphone71/System.Net.Http.Extensions.XML",
+        "lib/sl4-windowsphone71/System.Net.Http.Extensions.dll",
+        "lib/sl4-windowsphone71/System.Net.Http.Primitives.XML",
+        "lib/sl4-windowsphone71/System.Net.Http.Primitives.dll",
+        "lib/sl4-windowsphone71/System.Net.Http.dll",
+        "lib/sl4-windowsphone71/System.Net.Http.xml",
+        "lib/win8/System.Net.Http.Extensions.XML",
+        "lib/win8/System.Net.Http.Extensions.dll",
+        "lib/win8/System.Net.Http.Primitives.dll",
+        "lib/win8/System.Net.Http.Primitives.xml",
+        "lib/wpa81/System.Net.Http.Extensions.XML",
+        "lib/wpa81/System.Net.Http.Extensions.dll",
+        "lib/wpa81/System.Net.Http.Primitives.dll",
+        "lib/wpa81/System.Net.Http.Primitives.xml"
+      ]
+    },
+    "PCLCrypto/1.0.2.15130": {
+      "sha512": "FbqU/mbtemApQTSLHTlLHmzR55oB9O8FJ6cEiQdJr2PMpzGM6k4yroHpJKBcl+bZ6SplTClK3SS6xxlskyLgHg==",
+      "type": "package",
+      "path": "PCLCrypto/1.0.2.15130",
+      "files": [
+        "PCLCrypto.1.0.2.15130.nupkg.sha512",
+        "PCLCrypto.nuspec",
+        "lib/Xamarin.iOS/PCLCrypto.dll",
+        "lib/Xamarin.iOS/PCLCrypto.xml",
+        "lib/monoandroid/PCLCrypto.dll",
+        "lib/monoandroid/PCLCrypto.xml",
+        "lib/monotouch/PCLCrypto.dll",
+        "lib/monotouch/PCLCrypto.xml",
+        "lib/net40-Client/PCLCrypto.dll",
+        "lib/net40-Client/PCLCrypto.xml",
+        "lib/portable-net40+sl50+win+wpa81+wp80+MonoAndroid10+xamarinios10+MonoTouch10/PCLCrypto.dll",
+        "lib/portable-net40+sl50+win+wpa81+wp80+MonoAndroid10+xamarinios10+MonoTouch10/PCLCrypto.xml",
+        "lib/sl5/PCLCrypto.dll",
+        "lib/sl5/PCLCrypto.xml",
+        "lib/win81/PCLCrypto.dll",
+        "lib/win81/PCLCrypto.pri",
+        "lib/win81/PCLCrypto.xml",
+        "lib/wp8/PCLCrypto.dll",
+        "lib/wp8/PCLCrypto.xml",
+        "lib/wpa81/PCLCrypto.dll",
+        "lib/wpa81/PCLCrypto.pri",
+        "lib/wpa81/PCLCrypto.xml"
+      ]
+    },
+    "PCLStorage/1.0.2": {
+      "sha512": "9If+1ZFCk3QaT/asfiL+J9FMnx2CTMrLCU8tDMUOI/aCGWGWl9vJ1/KcMkjf92op23ZknenvYJZBLDAqE3sFlg==",
+      "type": "package",
+      "path": "PCLStorage/1.0.2",
+      "files": [
+        "PCLStorage.1.0.2.nupkg.sha512",
+        "PCLStorage.nuspec",
+        "lib/monoandroid/PCLStorage.Abstractions.dll",
+        "lib/monoandroid/PCLStorage.Abstractions.xml",
+        "lib/monoandroid/PCLStorage.dll",
+        "lib/monoandroid/PCLStorage.xml",
+        "lib/monotouch/PCLStorage.Abstractions.dll",
+        "lib/monotouch/PCLStorage.Abstractions.xml",
+        "lib/monotouch/PCLStorage.dll",
+        "lib/monotouch/PCLStorage.xml",
+        "lib/net45/PCLStorage.Abstractions.dll",
+        "lib/net45/PCLStorage.Abstractions.xml",
+        "lib/net45/PCLStorage.dll",
+        "lib/net45/PCLStorage.xml",
+        "lib/portable-Xamarin.iOS+Xamarin.Mac/PCLStorage.Abstractions.dll",
+        "lib/portable-Xamarin.iOS+Xamarin.Mac/PCLStorage.Abstractions.xml",
+        "lib/portable-Xamarin.iOS+Xamarin.Mac/PCLStorage.dll",
+        "lib/portable-Xamarin.iOS+Xamarin.Mac/PCLStorage.xml",
+        "lib/portable-net45+sl5+wp8+wpa81+win8+monoandroid+monotouch+Xamarin.iOS+Xamarin.Mac/PCLStorage.Abstractions.dll",
+        "lib/portable-net45+sl5+wp8+wpa81+win8+monoandroid+monotouch+Xamarin.iOS+Xamarin.Mac/PCLStorage.Abstractions.xml",
+        "lib/portable-net45+sl5+wp8+wpa81+win8+monoandroid+monotouch+Xamarin.iOS+Xamarin.Mac/PCLStorage.dll",
+        "lib/portable-net45+sl5+wp8+wpa81+win8+monoandroid+monotouch+Xamarin.iOS+Xamarin.Mac/PCLStorage.xml",
+        "lib/portable-net45+wp8+wpa81+win8+monoandroid+monotouch+Xamarin.iOS+Xamarin.Mac/PCLStorage.Abstractions.dll",
+        "lib/portable-net45+wp8+wpa81+win8+monoandroid+monotouch+Xamarin.iOS+Xamarin.Mac/PCLStorage.Abstractions.xml",
+        "lib/portable-net45+wp8+wpa81+win8+monoandroid+monotouch+Xamarin.iOS+Xamarin.Mac/PCLStorage.dll",
+        "lib/portable-net45+wp8+wpa81+win8+monoandroid+monotouch+Xamarin.iOS+Xamarin.Mac/PCLStorage.xml",
+        "lib/portable-win8+wpa81/PCLStorage.Abstractions.dll",
+        "lib/portable-win8+wpa81/PCLStorage.Abstractions.xml",
+        "lib/portable-win8+wpa81/PCLStorage.dll",
+        "lib/portable-win8+wpa81/PCLStorage.xml",
+        "lib/sl5/PCLStorage.Abstractions.dll",
+        "lib/sl5/PCLStorage.Abstractions.xml",
+        "lib/sl5/PCLStorage.dll",
+        "lib/sl5/PCLStorage.xml",
+        "lib/wp8/PCLStorage.Abstractions.dll",
+        "lib/wp8/PCLStorage.Abstractions.xml",
+        "lib/wp8/PCLStorage.dll",
+        "lib/wp8/PCLStorage.xml"
+      ]
+    },
+    "Validation/2.0.6.15003": {
+      "sha512": "8vgCOG9mPeOd3xwyL20OT9RyOKq9PmJb0Iltzwj6eay38Cq2v6ojvpSDbc+sc6YXit+iAVyyvHTS29rBvDpdDQ==",
+      "type": "package",
+      "path": "Validation/2.0.6.15003",
+      "files": [
+        "Validation.2.0.6.15003.nupkg.sha512",
+        "Validation.nuspec",
+        "lib/portable-net40+sl50+win+wpa81+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10/Validation.dll",
+        "lib/portable-net40+sl50+win+wpa81+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10/Validation.xml"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "": [
+      "AWSSDK.DynamoDBv2 >= 3.2.8-rc",
+      "Microsoft.AspnetCore.Identity >= 1.1.0"
+    ],
+    ".NETPortable,Version=v4.5,Profile=Profile7": []
+  },
+  "tools": {},
+  "projectFileToolGroups": {}
+}

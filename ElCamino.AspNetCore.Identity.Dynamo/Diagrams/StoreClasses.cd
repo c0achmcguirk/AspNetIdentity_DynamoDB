@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ElCamino.AspNet.Identity.Dynamo.RoleStore&lt;TRole&gt;">
+    <Position X="12.5" Y="7.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>RoleStore.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ElCamino.AspNet.Identity.Dynamo.RoleStore&lt;TRole, TKey, TUserRole&gt;">
+    <Position X="12.5" Y="2.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAiAEgAAAAAAAIAAAAgAACAgAAAAAQICAAIA=</HashCode>
+      <FileName>RoleStore.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ElCamino.AspNet.Identity.Dynamo.UserStore&lt;TUser&gt;">
+    <Position X="7.25" Y="14.75" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UserStore.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ElCamino.AspNet.Identity.Dynamo.UserStore&lt;TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim&gt;">
+    <Position X="7.25" Y="2.25" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>BCQACiECAuAEgNwBDEZAaAAkCAAACIyiBAAAwIBAAPA=</HashCode>
+      <FileName>UserStore.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

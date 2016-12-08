@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ElCamino.AspNet.Identity.Dynamo.Model.IdentityRole">
+    <Position X="5.25" Y="18" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\IdentityRole.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ElCamino.AspNet.Identity.Dynamo.Model.IdentityRole&lt;TKey, TUserRole&gt;">
+    <Position X="2" Y="18" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACACAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\IdentityRole.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ElCamino.AspNet.Identity.Dynamo.Model.IdentityUserRole">
+    <Position X="5.25" Y="0.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\IdentityUserRole.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ElCamino.AspNet.Identity.Dynamo.Model.IdentityUserRole&lt;TKey&gt;">
+    <Position X="2" Y="0.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAAIAACAAAAAAAAAAAAgAAAAAAAAAAQAAEAAAAAA=</HashCode>
+      <FileName>Model\IdentityUserRole.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ElCamino.AspNet.Identity.Dynamo.Model.IdentityUserLogin">
+    <Position X="5.25" Y="12.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\IdentityUserLogin.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ElCamino.AspNet.Identity.Dynamo.Model.IdentityUserLogin&lt;TKey&gt;">
+    <Position X="2" Y="12.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAACAAAAAAAAAAAAgAAAAAEAAAARAAAAAAAAA=</HashCode>
+      <FileName>Model\IdentityUserLogin.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ElCamino.AspNet.Identity.Dynamo.Model.IdentityUserIndex">
+    <Position X="5.25" Y="15.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\IdentityUserIndex.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ElCamino.AspNet.Identity.Dynamo.Model.IdentityUserIndex&lt;TKey&gt;">
+    <Position X="2" Y="15.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\IdentityUserIndex.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ElCamino.AspNet.Identity.Dynamo.Model.IdentityUserClaim">
+    <Position X="5.25" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\IdentityUserClaim.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ElCamino.AspNet.Identity.Dynamo.Model.IdentityUserClaim&lt;TKey&gt;">
+    <Position X="2" Y="3.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAACAAAAAAQAAAAAgAAAAAAAAAAQAAAAAACAA=</HashCode>
+      <FileName>Model\IdentityUserClaim.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ElCamino.AspNet.Identity.Dynamo.Model.IdentityUser">
+    <Position X="5.25" Y="6.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAAAAAAAAAAAAAAAAQAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Model\IdentityUser.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ElCamino.AspNet.Identity.Dynamo.Model.IdentityUser&lt;TKey, TLogin, TRole, TClaim&gt;">
+    <Position X="2" Y="6.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AACCIAAAACAAIEAAAAAAQAgBAgAAAAAIAQQQABAAAQA=</HashCode>
+      <FileName>Model\IdentityUser.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="ElCamino.AspNet.Identity.Dynamo.Model.IUserKeys&lt;TKey&gt;">
+    <Position X="10.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAACAAAAAAAAAAAAgAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Model\IUserKeys.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ElCamino.AspNet.Identity.Dynamo.Model.IGenerateKeys">
+    <Position X="8.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\IGenerateKeys.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

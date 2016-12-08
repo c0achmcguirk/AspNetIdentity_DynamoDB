@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 [assembly: NeutralResourcesLanguage("en-US")]
 
 [assembly: ComVisible(false)]
-[assembly: Guid("6C81653D-7952-4205-ADFA-A1C6050B2539")]
+[assembly: Guid("747ddb95-c5ed-4413-89fa-39c9f887de9d")]
 
 //http://semver.org/
 [assembly: AssemblyVersion("3.0.0.0")]

@@ -1,48 +1,40 @@
 ﻿// MIT License Copyright 2014 (c) David Melendez. All rights reserved. See License.txt in the project root for license information.
-using ElCamino.AspNet.Identity.Dynamo.Configuration;
-using ElCamino.AspNet.Identity.Dynamo.Model;
+using Amazon.DynamoDBv2.DataModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Amazon;
+#if net45
+using ElCamino.AspNet.Identity.Dynamo.Model;
+#else
+using ElCamino.AspNetCore.Identity.Dynamo.Model;
+#endif
+using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DocumentModel;
+using Amazon.DynamoDBv2.Model;
+using ElCamino.AspNet.Identity.Dynamo.Configuration;
 
-namespace ElCamino.AspNet.Identity.Dynamo
+namespace ElCamino.AspNetCore.Identity.Dynamo
 {
     public class IdentityCloudContext : IdentityCloudContext<IdentityUser, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>
     {
-        public IdentityCloudContext() : base() { }
+        public IdentityCloudContext() : base(new IdentityDynamoOptions())
+        { }
 
-        [System.Obsolete("Please use the default constructor IdentityCloudContext() to load the configSection from web/app.config or " +
-            "the constructor IdentityCloudContext(IdentityConfiguration config) for more options.")]
-        public IdentityCloudContext(string connectionStringKey)
-            : base(connectionStringKey) { }
-
-        public IdentityCloudContext(IdentityConfiguration config) :
+        public IdentityCloudContext(IdentityDynamoOptions config) :
             base(config) { }
 
-        public IdentityCloudContext(AmazonDynamoDBConfig config)
-            : base(config) { }
     }
 
     public class IdentityCloudContext<TUser> : IdentityCloudContext<TUser, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim> where TUser : IdentityUser
     {
-        public IdentityCloudContext() : base()
-        {
-        }
+        public IdentityCloudContext() : base(new IdentityDynamoOptions())
+        { }
 
-        [System.Obsolete("Please use the default constructor IdentityCloudContext() to load the configSection from web/app.config or " +
-            "the constructor IdentityCloudContext(IdentityConfiguration config) for more options.")]
-        public IdentityCloudContext(string connectionStringKey)
-            : base(connectionStringKey)
-        {
-        }
-
-        public IdentityCloudContext(AmazonDynamoDBConfig config) 
-        : base(config) { }
-
-        public IdentityCloudContext(IdentityConfiguration config) 
+        public IdentityCloudContext(IdentityDynamoOptions config) 
            : base(config) { }
-
     }
 
     public class IdentityCloudContext<TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim>  : DynamoDBContext
@@ -54,7 +46,7 @@ namespace ElCamino.AspNet.Identity.Dynamo
     {
         private AmazonDynamoDBClient _client;
         protected bool _disposed = false;
-        private IdentityConfiguration _config = null;
+        private IdentityDynamoOptions _config = null;
 
 
         public AmazonDynamoDBClient Client
@@ -75,31 +67,9 @@ namespace ElCamino.AspNet.Identity.Dynamo
         }
 
 
-        public IdentityCloudContext()
-            : this(IdentityConfigurationSection.GetCurrent() ??
-              new IdentityConfiguration()
-            {
-                ServiceURL = System.Configuration.ConfigurationManager.ConnectionStrings[Constants.AppSettingsKeys.DefaultStorageConnectionStringKey].ConnectionString,
-                TablePrefix = string.Empty
-            }) { }
-
-        [Obsolete("Please use the default constructor IdentityCloudContext() to load the configSection from web/app.config or " +
-            "the constructor IdentityCloudContext(IdentityConfiguration config) for more options.")]
-        public IdentityCloudContext(string connectionStringKey)
-            : this(new IdentityConfiguration()
-            {
-                ServiceURL = System.Configuration.ConfigurationManager.ConnectionStrings[connectionStringKey] == null ?
-                        connectionStringKey : System.Configuration.ConfigurationManager.ConnectionStrings[connectionStringKey].ConnectionString
-            })
+        public IdentityCloudContext(IdentityDynamoOptions config) : base(new AmazonDynamoDBClient())
         {
-        }
-
-        public IdentityCloudContext(AmazonDynamoDBConfig config)
-            : this(new IdentityConfiguration(config)) { }
-
-        public IdentityCloudContext(IdentityConfiguration config)
-            : base(new AmazonDynamoDBClient(config))
-        {
+            this._config = config;
             Initialize(config);
         }
 
@@ -108,10 +78,16 @@ namespace ElCamino.AspNet.Identity.Dynamo
             return TablePrefix + tableName;
         }
 
-        private void Initialize(IdentityConfiguration config)
+        private void Initialize(IdentityDynamoOptions config)
         {
             _config = config;
-            _client = new AmazonDynamoDBClient(config);
+            var dbConfig = new AmazonDynamoDBConfig();
+            dbConfig.AuthenticationRegion = config.AuthenticationRegion;
+            dbConfig.LogMetrics = config.LogMetrics ?? false;
+            dbConfig.LogResponse = config.LogResponse ?? false;
+            dbConfig.BufferSize = config.BufferSize;
+            dbConfig.ServiceURL = config.ServiceUrl;
+            _client = new AmazonDynamoDBClient(dbConfig);
         }
 
         public CreateTableRequest GenerateUserCreateTableRequest(string tableName, 
@@ -305,15 +281,13 @@ namespace ElCamino.AspNet.Identity.Dynamo
 
         public async Task CreateTableAsync(CreateTableRequest request)
         {
-            await new TaskFactory().StartNew(() =>
+            await new TaskFactory().StartNew(async () =>
             {
-                var tableRespone = _client.ListTables();
-
-                bool tableExists = tableRespone.TableNames.Any(t => t == request.TableName);
+                var tableResponse = await _client.ListTablesAsync();
+                var tableExists = tableResponse.TableNames.Any(t => t == request.TableName);
                 if (!tableExists)
                 {
-                    var response = _client.CreateTable(request);
-
+                    var response = await _client.CreateTableAsync(request);
                     WaitTillTableCreated(request.TableName, response);
                 }
             });
@@ -330,7 +304,7 @@ namespace ElCamino.AspNet.Identity.Dynamo
         }
 
 
-        protected void WaitTillTableCreated(string tableName, CreateTableResponse response)
+        protected async Task WaitTillTableCreated(string tableName, CreateTableResponse response)
         {
             var tableDescription = response.TableDescription;
 
@@ -344,7 +318,7 @@ namespace ElCamino.AspNet.Identity.Dynamo
                 System.Threading.Thread.Sleep(5000); // Wait 5 seconds.
                 try
                 {
-                    var res = _client.DescribeTable(new DescribeTableRequest
+                    var res = await _client.DescribeTableAsync(new DescribeTableRequest
                     {
                         TableName = tableName
                     });

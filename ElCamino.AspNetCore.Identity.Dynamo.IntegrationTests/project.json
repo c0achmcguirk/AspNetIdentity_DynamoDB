@@ -1,0 +1,11 @@
+{
+  "supports": {},
+  "dependencies": {
+    "AWSSDK.DynamoDBv2": "3.2.8-rc",
+    "Microsoft.AspnetCore.Identity": "1.1.0",
+    "ElCamino.AspNetCore.Identity.Dynamo": "*"
+  },
+  "frameworks": {
+    ".NETPortable,Version=v4.5,Profile=Profile7": {}
+  }
+}

@@ -6,7 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
+#if net45
 namespace ElCamino.AspNet.Identity.Dynamo.Helpers
+#else
+namespace ElCamino.AspNetCore.Identity.Dynamo.Helpers
+#endif
 {
     public static class KeyHelper
     {

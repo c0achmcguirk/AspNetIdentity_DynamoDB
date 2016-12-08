@@ -1,34 +1,33 @@
 ﻿// MIT License Copyright 2014 (c) David Melendez. All rights reserved. See License.txt in the project root for license information.
-#if net45
-using ElCamino.AspNet.Identity.Dynamo.Model;
-using Microsoft.AspNet.Identity;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using ElCamino.AspNet.Identity.Dynamo.Helpers;
-using Amazon.DynamoDBv2.DocumentModel;
-using Amazon.DynamoDBv2.DataModel;
-using Amazon.DynamoDBv2.Model;
+#if !net45
 using Amazon.DynamoDBv2;
-using System.Threading;
+using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.DocumentModel;
+using Amazon.DynamoDBv2.Model;
+using ElCamino.AspNet.Identity.Dynamo;
+using ElCamino.AspNet.Identity.Dynamo.Helpers;
+using ElCamino.AspNet.Identity.Dynamo.Model;
+using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace ElCamino.AspNet.Identity.Dynamo
+namespace ElCamino.AspNetCore.Identity.Dynamo
 {
-    public class UserStore<TUser> : UserStore<TUser, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>, IUserStore<TUser>, IUserStore<TUser, string> where TUser : IdentityUser, new()
+    public class UserStore<TUser> : UserStore<TUser, IdentityCloudContext> 
+        where TUser : IdentityUser, new() 
     {
         public UserStore()
-            : this(new IdentityCloudContext<TUser>())
+            : this(new IdentityCloudContext())
         {
            
         }
 
-        public UserStore(IdentityCloudContext<TUser> context)
+        public UserStore(IdentityCloudContext context)
             : base(context)
         {
         }
@@ -40,14 +39,44 @@ namespace ElCamino.AspNet.Identity.Dynamo
         }
     }
 
-    public class UserStore<TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim> : IUserLoginStore<TUser, TKey>
-        , IUserClaimStore<TUser, TKey>
-        , IUserRoleStore<TUser, TKey>, IUserPasswordStore<TUser, TKey>
-        , IUserSecurityStampStore<TUser, TKey>, IQueryableUserStore<TUser, TKey>
-        , IUserEmailStore<TUser, TKey>, IUserPhoneNumberStore<TUser, TKey>
-        , IUserTwoFactorStore<TUser, TKey>
-        , IUserLockoutStore<TUser, TKey>
-        , IUserStore<TUser, TKey>
+    public class UserStore<TUser, TContext> : UserStore<TUser, IdentityRole, TContext>, IUserStore<TUser>
+        where TUser : IdentityUser, new()
+        where TContext : IdentityCloudContext, new()
+    {
+        public UserStore(TContext context)
+            : base(context)
+        {
+        }
+
+        //Fixing code analysis issue CA1063
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+        }
+    }
+
+    public class UserStore<TUser, TRole, TContext> : UserStore<TUser, TRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim, TContext>, IUserStore<TUser>
+        where TUser : IdentityUser, new()
+        where TRole : IdentityRole<string, IdentityUserRole>, new()
+        where TContext : IdentityCloudContext, new()
+    {
+        public UserStore(TContext context)
+            : base(context)
+        {
+        }
+    }
+
+    public class UserStore<TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TContext> : IUserLoginStore<TUser>
+        , IUserClaimStore<TUser>
+        , IUserRoleStore<TUser>
+        , IUserPasswordStore<TUser>
+        , IUserSecurityStampStore<TUser>
+        , IQueryableUserStore<TUser>
+        , IUserEmailStore<TUser>
+        , IUserPhoneNumberStore<TUser>
+        , IUserTwoFactorStore<TUser>
+        , IUserLockoutStore<TUser>
+        , IUserStore<TUser>
         , IDisposable
         where TUser : IdentityUser<TKey, TUserLogin, TUserRole, TUserClaim>, new()
         where TRole : IdentityRole<TKey, TUserRole>, new()
@@ -55,18 +84,25 @@ namespace ElCamino.AspNet.Identity.Dynamo
         where TUserLogin : IdentityUserLogin<TKey>, new()
         where TUserRole : IdentityUserRole<TKey>, new()
         where TUserClaim : IdentityUserClaim<TKey>, new()
+        where TContext : IdentityCloudContext, new()
     {
         private bool _disposed;
         private IQueryable<TUser> _users;
 
+        private AmazonDynamoDBClient _dbClient;
+        private string _tablePrefix;
 
-        public UserStore(IdentityCloudContext<TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim> context)
+        public TContext Context { get; private set; }
+
+        public UserStore(TContext context)
         {
             if (context == null)
             {
-                throw new ArgumentNullException("context");
+                throw new ArgumentNullException(nameof(context));
             }
             this.Context = context;
+            _dbClient = context.Client;
+            _tablePrefix = context.TablePrefix;
         }
 
         public async Task CreateTablesIfNotExists()
@@ -79,18 +115,59 @@ namespace ElCamino.AspNet.Identity.Dynamo
             });
         }
 
-        public virtual async Task AddClaimAsync(TUser user, Claim claim)
+
+        public virtual async Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
+            }
+            if (claims == null)
+            {
+                throw new ArgumentNullException(nameof(claims));
+            }
+
+            foreach (var claim in claims)
+            {
+                TUserClaim item = Activator.CreateInstance<TUserClaim>();
+                item.UserId = user.UserId;
+                item.ClaimType = claim.Type;
+                item.ClaimValue = claim.Value;
+                item.UserName = user.UserName;
+                item.Email = user.Email;
+                ((IGenerateKeys)item).GenerateKeys();
+
+                user.Claims.Add(item);
+
+                var putRequest = new PutItemRequest()
+                {
+                    TableName = Context.FormatTableNameWithPrefix(Constants.TableNames.UsersTable),
+                    Item = Context.ToDocument<TUserClaim>(item).ToAttributeMap(),
+                };
+
+                await Context.Client.PutItemAsync(putRequest, cancellationToken);
+            }
+        }
+
+        public Task ReplaceClaimAsync(TUser user, Claim claim, Claim newClaim, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual async Task AddClaimAsync(TUser user, Claim claim, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
             }
             if (claim == null)
             {
-                throw new ArgumentNullException("claim");
+                throw new ArgumentNullException(nameof(claim));
             }
-
 
             TUserClaim item = Activator.CreateInstance<TUserClaim>();
             item.UserId = user.UserId;
@@ -100,7 +177,6 @@ namespace ElCamino.AspNet.Identity.Dynamo
             item.Email = user.Email;
             ((IGenerateKeys)item).GenerateKeys();
 
-
             user.Claims.Add(item);
 
             var putRequest = new PutItemRequest()
@@ -109,12 +185,12 @@ namespace ElCamino.AspNet.Identity.Dynamo
                 Item = Context.ToDocument<TUserClaim>(item).ToAttributeMap(),
             };
 
-            await Context.Client.PutItemAsync(putRequest);
-                    
+            await Context.Client.PutItemAsync(putRequest, cancellationToken);
         }
 
-        public virtual async Task AddLoginAsync(TUser user, UserLoginInfo login)
+        public virtual async Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             if (user == null)
             {
@@ -157,19 +233,20 @@ namespace ElCamino.AspNet.Identity.Dynamo
             batchWriteReq.RequestItems.Add(Context.FormatTableNameWithPrefix(Constants.TableNames.UsersTable), listUserwr);
             batchWriteReq.RequestItems.Add(Context.FormatTableNameWithPrefix(Constants.TableNames.IndexTable), listIndexwr);
 
-            await Context.Client.BatchWriteItemAsync(batchWriteReq);
+            await Context.Client.BatchWriteItemAsync(batchWriteReq, cancellationToken);
         }
 
-        public virtual async Task AddToRoleAsync(TUser user, string roleName)
+        public virtual async Task AddToRoleAsync(TUser user, string roleName, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             if (string.IsNullOrWhiteSpace(roleName))
             {
-                throw new ArgumentException(IdentityResources.ValueCannotBeNullOrEmpty, "roleName");
+                throw new ArgumentException(IdentityResources.ValueCannotBeNullOrEmpty, nameof(roleName));
             }
 
             TRole roleT = Activator.CreateInstance<TRole>();
@@ -193,47 +270,77 @@ namespace ElCamino.AspNet.Identity.Dynamo
             {
                 TableNamePrefix = this.Context.TablePrefix,
                 ConsistentRead = true,
-            });
-
+            }, cancellationToken);
         }
 
-        public async virtual Task CreateAsync(TUser user)
+        public virtual async Task<IdentityResult> CreateAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             ((IGenerateKeys)user).GenerateKeys();
 
-            await Context.SaveAsync<TUser>(user, new DynamoDBOperationConfig()
+            try
+            {
+                await Context.SaveAsync<TUser>(user, new DynamoDBOperationConfig()
                 {
                     TableNamePrefix = this.Context.TablePrefix,
                     ConsistentRead = true
-                });
-
+                }, cancellationToken);
+                return IdentityResult.Success;
+            }
+            catch (Exception ex)
+            {
+                return IdentityResult.Failed(new IdentityError() { Code = "001", Description = $"User Creation Failed. {ex.Message}, {ex.StackTrace}"}); 
+            }
         }
 
-        public async virtual Task DeleteAsync(TUser user)
+        public virtual async Task<IdentityResult> DeleteAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
 
-            BatchOperationHelper batchHelper = new BatchOperationHelper();
-            batchHelper.Add(Context.FormatTableNameWithPrefix(Constants.TableNames.UsersTable), CreateDeleteRequestForUser(user.UserId, user.Id));
-            user.Claims.ToList().ForEach(c => { batchHelper.Add(Context.FormatTableNameWithPrefix(Constants.TableNames.UsersTable), CreateDeleteRequestForUser(c.UserId, c.Id)); });
-            user.Roles.ToList().ForEach(r => { batchHelper.Add(Context.FormatTableNameWithPrefix(Constants.TableNames.UsersTable), CreateDeleteRequestForUser(r.UserId, r.Id)); });
-            user.Logins.ToList().ForEach(l => 
-            { 
-                batchHelper.Add(Context.FormatTableNameWithPrefix(Constants.TableNames.UsersTable), CreateDeleteRequestForUser(l.UserId, l.Id));
-                batchHelper.Add(Context.FormatTableNameWithPrefix(Constants.TableNames.IndexTable), CreateDeleteRequestForIndex(l.Id));
-            });
+            try
+            {
+                BatchOperationHelper batchHelper = new BatchOperationHelper();
+                batchHelper.Add(Context.FormatTableNameWithPrefix(Constants.TableNames.UsersTable),
+                    CreateDeleteRequestForUser(user.UserId, user.Id));
+                user.Claims.ToList()
+                    .ForEach(
+                        c =>
+                        {
+                            batchHelper.Add(Context.FormatTableNameWithPrefix(Constants.TableNames.UsersTable),
+                                CreateDeleteRequestForUser(c.UserId, c.Id));
+                        });
+                user.Roles.ToList()
+                    .ForEach(
+                        r =>
+                        {
+                            batchHelper.Add(Context.FormatTableNameWithPrefix(Constants.TableNames.UsersTable),
+                                CreateDeleteRequestForUser(r.UserId, r.Id));
+                        });
+                user.Logins.ToList().ForEach(l =>
+                {
+                    batchHelper.Add(Context.FormatTableNameWithPrefix(Constants.TableNames.UsersTable),
+                        CreateDeleteRequestForUser(l.UserId, l.Id));
+                    batchHelper.Add(Context.FormatTableNameWithPrefix(Constants.TableNames.IndexTable),
+                        CreateDeleteRequestForIndex(l.Id));
+                });
 
-            await batchHelper.ExecuteBatchAsync(Context.Client);
-
+                await batchHelper.ExecuteBatchAsync(Context.Client);
+                return IdentityResult.Success;
+            }
+            catch (Exception ex)
+            {
+                return IdentityResult.Failed(new IdentityError() { Code = "002", Description = $"User Delete Failed. {ex.Message} {ex.StackTrace}"});
+            }
         }
 
         private WriteRequest CreateDeleteRequestForUser(TKey UserId, TKey Id)
@@ -274,35 +381,35 @@ namespace ElCamino.AspNet.Identity.Dynamo
             }
         }
 
-        public async virtual Task<TUser> FindAsync(UserLoginInfo login)
+        public virtual async Task<TUser> FindAsync(UserLoginInfo login, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
 
             if (login == null)
             {
-                throw new ArgumentNullException("login");
+                throw new ArgumentNullException(nameof(login));
             }
 
-            return await Context.LoadAsync<IdentityUserIndex<TKey>>(login.GenerateRowKeyUserLoginInfo(),
+            return await Context.LoadAsync<IdentityUserIndex<string>>(login.GenerateRowKeyUserLoginInfo(),
                 new DynamoDBOperationConfig()
                 {
                     TableNamePrefix = Context.TablePrefix,
                     ConsistentRead = true,
-                })
-                .ContinueWith<Task<TUser>>(new Func<Task<IdentityUserIndex<TKey>>, Task<TUser>>((index) =>
+                }, cancellationToken)
+                .ContinueWith<Task<TUser>>(new Func<Task<IdentityUserIndex<string>>, Task<TUser>>((index) =>
                 {
                     if (index.Result != null)
                     {
-                        return FindByIdAsync(index.Result.UserId);
+                        return FindByIdAsync(index.Result.UserId, cancellationToken);
                     }
-                    return new TaskFactory<TUser>().StartNew(() => null);
-
-                })).Unwrap();
-
+                    return new TaskFactory<TUser>().StartNew(() => null, cancellationToken);
+                }), cancellationToken).Unwrap();
         }
 
-        public async Task<TUser> FindByEmailAsync(string email)
+        public async Task<TUser> FindByEmailAsync(string email, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             this.ThrowIfDisposed();
             if (string.IsNullOrWhiteSpace(email))
             {
@@ -330,6 +437,12 @@ namespace ElCamino.AspNet.Identity.Dynamo
             );
             
 
+        }
+
+        public Task<TUser> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var loginInfo = new UserLoginInfo(loginProvider, providerKey, "");
+            return FindAsync(loginInfo, cancellationToken);
         }
 
         public async Task<IEnumerable<TUser>> FindAllByEmailAsync(string email)
@@ -363,18 +476,18 @@ namespace ElCamino.AspNet.Identity.Dynamo
 
         }
 
-
-        public virtual async Task<TUser> FindByIdAsync(TKey userId)
+        public virtual async Task<TUser> FindByIdAsync(string userId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
 
             if (userId == null)
             {
-                throw new ArgumentNullException("userId");
+                throw new ArgumentNullException(nameof(userId));
             }
-            if (string.IsNullOrWhiteSpace(userId.ToString()))
+            if (string.IsNullOrWhiteSpace(userId))
             {
-                throw new ArgumentException(IdentityResources.ValueCannotBeNullOrEmpty, "userId");
+                throw new ArgumentException(IdentityResources.ValueCannotBeNullOrEmpty, nameof(userId));
             }
 
 
@@ -391,12 +504,8 @@ namespace ElCamino.AspNet.Identity.Dynamo
                         }
                     }
                 }
-            })
-            .ContinueWith<TUser>(new Func<Task<QueryResponse>, TUser>((qResponse) =>
-            {
-                return ConvertResponseToUser(qResponse.Result.Items);
-            }));
-           
+            }, cancellationToken)
+            .ContinueWith<TUser>((qResponse) => ConvertResponseToUser(qResponse.Result.Items), cancellationToken);
         }
 
         private IEnumerable<TUser> ConvertResponseToUsers(List<Dictionary<string, AttributeValue>> response)
@@ -462,9 +571,10 @@ namespace ElCamino.AspNet.Identity.Dynamo
             return user;
         }
 
-        public virtual async Task<TUser> FindByNameAsync(string userName)
+        public virtual async Task<TUser> FindByNameAsync(string userName, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
 
             return await Context.Client.QueryAsync(new QueryRequest()
             {
@@ -479,26 +589,24 @@ namespace ElCamino.AspNet.Identity.Dynamo
                         }
                     }
                 }
-            })
-            .ContinueWith<TUser>(new Func<Task<QueryResponse>, TUser>((qResponse) =>
-            {
-                return ConvertResponseToUser(qResponse.Result.Items);
-            }));
-
+            }, cancellationToken)
+            .ContinueWith<TUser>((qResponse) => ConvertResponseToUser(qResponse.Result.Items), cancellationToken);
         }
 
-        public Task<int> GetAccessFailedCountAsync(TUser user)
+        public Task<int> GetAccessFailedCountAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             return Task.FromResult<int>(user.AccessFailedCount);
         }
 
-        public virtual Task<IList<Claim>> GetClaimsAsync(TUser user)
+        public virtual Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             this.ThrowIfDisposed();
             if (user == null)
             {
@@ -507,42 +615,46 @@ namespace ElCamino.AspNet.Identity.Dynamo
             return Task.FromResult<IList<Claim>>(user.Claims.Select(c => new Claim(c.ClaimType, c.ClaimValue)).ToList());
         }
 
-        public Task<string> GetEmailAsync(TUser user)
+        public Task<string> GetEmailAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             this.ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             return Task.FromResult<string>(user.Email);
         }
 
-        public Task<bool> GetEmailConfirmedAsync(TUser user)
+        public Task<bool> GetEmailConfirmedAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             this.ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             return Task.FromResult<bool>(user.EmailConfirmed);
         }
 
-        public Task<bool> GetLockoutEnabledAsync(TUser user)
+        public Task<bool> GetLockoutEnabledAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             this.ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             return Task.FromResult<bool>(user.LockoutEnabled);
         }
 
-        public Task<DateTimeOffset> GetLockoutEndDateAsync(TUser user)
+        public Task<DateTimeOffset?> GetLockoutEndDateAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             this.ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             Func<DateTimeOffset> funcDt = () =>
                 {
@@ -557,121 +669,178 @@ namespace ElCamino.AspNet.Identity.Dynamo
                     }
                     return new DateTimeOffset();
                 };
-            return Task.FromResult<DateTimeOffset>(funcDt());
+            return Task.FromResult<DateTimeOffset?>(funcDt());
         }
 
-        public virtual Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user)
+        public virtual Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             this.ThrowIfDisposed();
             if (user == null)
             {
                 throw new ArgumentNullException("user");
             }
-            return Task.FromResult<IList<UserLoginInfo>>((from l in user.Logins select new UserLoginInfo(l.LoginProvider, l.ProviderKey)).ToList<UserLoginInfo>());
+            return Task.FromResult<IList<UserLoginInfo>>((from l in user.Logins select new UserLoginInfo(l.LoginProvider, l.ProviderKey, user.UserName)).ToList<UserLoginInfo>());
         }
 
-        public Task<string> GetPasswordHashAsync(TUser user)
+        public Task<string> GetPasswordHashAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             return Task.FromResult<string>(user.PasswordHash);
         }
 
-        public Task<string> GetPhoneNumberAsync(TUser user)
+        public Task<string> GetPhoneNumberAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             return Task.FromResult<string>(user.PhoneNumber);
         }
 
-        public Task<bool> GetPhoneNumberConfirmedAsync(TUser user)
+        public Task<bool> GetPhoneNumberConfirmedAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             return Task.FromResult<bool>(user.PhoneNumberConfirmed);
         }
 
-        public virtual Task<IList<string>> GetRolesAsync(TUser user)
+        public virtual Task<IList<string>> GetRolesAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
 
             return Task.FromResult<IList<string>>(user.Roles.ToList().Select(r => r.RoleName).ToList());
         }
 
-        public Task<string> GetSecurityStampAsync(TUser user)
+        public Task<string> GetSecurityStampAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             return Task.FromResult<string>(user.SecurityStamp);
         }
 
-        public Task<bool> GetTwoFactorEnabledAsync(TUser user)
+        public Task<bool> GetTwoFactorEnabledAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             return Task.FromResult<bool>(user.TwoFactorEnabled);
         }
 
-        public Task<bool> HasPasswordAsync(TUser user)
+        public Task<bool> HasPasswordAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return Task.FromResult<bool>(user.PasswordHash != null);
         }
 
-        public Task<int> IncrementAccessFailedCountAsync(TUser user)
+        public Task<int> IncrementAccessFailedCountAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             this.ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             user.AccessFailedCount++;
             return Task.FromResult<int>(user.AccessFailedCount);
         }
 
-        public virtual Task<bool> IsInRoleAsync(TUser user, string roleName)
+        public virtual Task<bool> IsInRoleAsync(TUser user, string roleName, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             if (string.IsNullOrWhiteSpace(roleName))
             {
-                throw new ArgumentException(IdentityResources.ValueCannotBeNullOrEmpty, "roleName");
+                throw new ArgumentException(IdentityResources.ValueCannotBeNullOrEmpty, nameof(roleName));
             }
 
             return Task.FromResult<bool>(user.Roles.Any(r=> r.Id.ToString() == KeyHelper.GenerateRowKeyIdentityUserRole(roleName)));
         }
 
-        public virtual async Task RemoveClaimAsync(TUser user, Claim claim)
+        public Task<IList<TUser>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
         {
+            throw new NotImplementedException();
+        }
+
+        public virtual async Task RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
             this.ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
+            }
+            if (claims == null)
+            {
+                throw new ArgumentNullException(nameof(claims));
+            }
+
+            foreach (var claim in claims)
+            {
+                if (string.IsNullOrWhiteSpace(claim.Type))
+                {
+                    throw new ArgumentException(IdentityResources.ValueCannotBeNullOrEmpty, "claim.Type");
+                }
+
+                // Claim ctor doesn't allow Claim.Value to be null. Need to allow string.empty.
+                TUserClaim local = (from uc in user.Claims
+                                    where uc.Id.ToString() == KeyHelper.GenerateRowKeyIdentityUserClaim(claim.Type, claim.Value)
+                                    select uc).FirstOrDefault();
+                if(local != null)
+                {
+                    user.Claims.Remove(local);
+                    await Context.DeleteAsync<TUserClaim>(local, new DynamoDBOperationConfig()
+                    {
+                        TableNamePrefix = Context.TablePrefix,
+                        ConsistentRead = true,
+                    }, cancellationToken);
+                }
+            }
+        }
+
+        public Task<IList<TUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual async Task RemoveClaimAsync(TUser user, Claim claim, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            this.ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
             }
             if (claim == null)
             {
-                throw new ArgumentNullException("claim");
+                throw new ArgumentNullException(nameof(claim));
             }
 
             if (string.IsNullOrWhiteSpace(claim.Type))
@@ -680,8 +849,6 @@ namespace ElCamino.AspNet.Identity.Dynamo
             }
 
             // Claim ctor doesn't allow Claim.Value to be null. Need to allow string.empty.
-
-                   
             TUserClaim local = (from uc in user.Claims
                                 where uc.Id.ToString() == KeyHelper.GenerateRowKeyIdentityUserClaim(claim.Type, claim.Value)
                                 select uc).FirstOrDefault();
@@ -692,22 +859,23 @@ namespace ElCamino.AspNet.Identity.Dynamo
                 {
                     TableNamePrefix = Context.TablePrefix,
                     ConsistentRead = true,
-                });
+                }, cancellationToken);
             }
         }
 
-        public virtual async Task RemoveFromRoleAsync(TUser user, string roleName)
+        public virtual async Task RemoveFromRoleAsync(TUser user, string roleName, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             if (string.IsNullOrWhiteSpace(roleName))
             {
-                throw new ArgumentException(IdentityResources.ValueCannotBeNullOrEmpty, "roleName");
+                throw new ArgumentException(IdentityResources.ValueCannotBeNullOrEmpty, nameof(roleName));
             }
-            TUserRole item = user.Roles.FirstOrDefault<TUserRole>(r => r.Id.ToString() == KeyHelper.GenerateRowKeyIdentityUserRole(roleName));
+            var item = user.Roles.FirstOrDefault<TUserRole>(r => r.Id.ToString() == KeyHelper.GenerateRowKeyIdentityUserRole(roleName));
             if (item != null)
             {
                 user.Roles.Remove(item);
@@ -715,12 +883,47 @@ namespace ElCamino.AspNet.Identity.Dynamo
                 {
                     TableNamePrefix = Context.TablePrefix,
                     ConsistentRead = true,
-                });
+                }, cancellationToken);
             }
         }
 
-        public virtual async Task RemoveLoginAsync(TUser user, UserLoginInfo login)
+        public virtual async Task RemoveLoginAsync(TUser user, string loginProvider, string providerKey, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+            this.ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            var batchWriteReq = new BatchWriteItemRequest();
+            batchWriteReq.RequestItems = new Dictionary<string, List<WriteRequest>>(10);
+            var listUserwr = new List<WriteRequest>(10);
+            var listIndexwr = new List<WriteRequest>(10);
+            var loginInfo = new UserLoginInfo(loginProvider, providerKey, user.UserName);
+            foreach (var local in (from uc in user.Logins.ToList()
+                                            where uc.Id.ToString() == KeyHelper.GenerateRowKeyUserLoginInfo(loginInfo)
+                                            select uc))
+            {
+                var wr = CreateDeleteRequestForUser(local.UserId, local.Id);
+                user.Logins.Remove(local);
+                listUserwr.Add(wr);
+
+                var iwr = CreateDeleteRequestForIndex(local.Id);
+                listIndexwr.Add(iwr);
+            }
+            batchWriteReq.RequestItems.Add(Context.FormatTableNameWithPrefix(Constants.TableNames.UsersTable), listUserwr);
+            batchWriteReq.RequestItems.Add(Context.FormatTableNameWithPrefix(Constants.TableNames.IndexTable), listIndexwr);
+
+            if (listUserwr.Count > 0)
+            {
+                var tresult = await Context.Client.BatchWriteItemAsync(batchWriteReq, cancellationToken);
+            }
+        }
+
+        public virtual async Task RemoveLoginAsync(TUser user, UserLoginInfo login, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
             this.ThrowIfDisposed();
             if (user == null)
             {
@@ -731,11 +934,11 @@ namespace ElCamino.AspNet.Identity.Dynamo
                 throw new ArgumentNullException("login");
             }
 
-            BatchWriteItemRequest batchWriteReq = new BatchWriteItemRequest();
+            var batchWriteReq = new BatchWriteItemRequest();
             batchWriteReq.RequestItems = new Dictionary<string, List<WriteRequest>>(10);
-            List<WriteRequest> listUserwr = new List<WriteRequest>(10);
-            List<WriteRequest> listIndexwr = new List<WriteRequest>(10);
-            foreach (TUserLogin local in (from uc in user.Logins.ToList()
+            var listUserwr = new List<WriteRequest>(10);
+            var listIndexwr = new List<WriteRequest>(10);
+            foreach (var local in (from uc in user.Logins.ToList()
                                             where uc.Id.ToString() == KeyHelper.GenerateRowKeyUserLoginInfo(login)
                                             select uc))
             {
@@ -751,40 +954,116 @@ namespace ElCamino.AspNet.Identity.Dynamo
 
             if (listUserwr.Count > 0)
             {
-                var tresult = await Context.Client.BatchWriteItemAsync(batchWriteReq);
+                var tresult = await Context.Client.BatchWriteItemAsync(batchWriteReq, cancellationToken);
             }
 
         }
 
-        public Task ResetAccessFailedCountAsync(TUser user)
+        public Task ResetAccessFailedCountAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             user.AccessFailedCount = 0;
             return Task.FromResult<int>(0);
         }
 
-        public async Task SetEmailAsync(TUser user, string email)
+        public virtual Task<string> GetNormalizedEmailAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            return Task.FromResult(user.NormalizedEmail);
+        }
+
+        public virtual Task SetNormalizedEmailAsync(TUser user, string normalizedEmail, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            user.NormalizedEmail = normalizedEmail;
+            return Task.FromResult(0);
+        }
+
+        public Task<string> GetUserIdAsync(TUser user, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual Task<string> GetUserNameAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            return Task.FromResult(user.UserName);
+        }
+
+        public virtual Task SetUserNameAsync(TUser user, string userName, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            user.UserName = userName;
+            return Task.FromResult(0);
+        }
+
+
+        public virtual Task<string> GetNormalizedUserNameAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            return Task.FromResult(user.NormalizedUserName);
+        }
+
+        public virtual Task SetNormalizedUserNameAsync(TUser user, string normalizedUserName, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            user.NormalizedUserName = normalizedUserName;
+            return Task.FromResult(0);
+        }
+
+        public async Task SetEmailAsync(TUser user, string email, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
             this.ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
 
             //Only remove the email if different
-            if (string.IsNullOrWhiteSpace(user.Email) ||
-                !user.Email.Equals(email?? string.Empty, StringComparison.OrdinalIgnoreCase))
+            if (string.IsNullOrWhiteSpace(user.Email) || !user.Email.Equals(email?? string.Empty, StringComparison.OrdinalIgnoreCase))
             {
                 var itemUpdates = CreateEmailUpdateRequests(user, email);
-                List<Task> tasks = new List<Task>(itemUpdates.Count);
+                var tasks = new List<Task>(itemUpdates.Count);
                 foreach (var updRequest in itemUpdates)
                 {
                     updRequest.TableName = Context.FormatTableNameWithPrefix(Constants.TableNames.UsersTable);
-                    tasks.Add(Context.Client.UpdateItemAsync(updRequest));
+                    tasks.Add(Context.Client.UpdateItemAsync(updRequest, cancellationToken));
                 }
                 await Task.WhenAll(tasks.ToArray());
             }
@@ -848,90 +1127,98 @@ namespace ElCamino.AspNet.Identity.Dynamo
             return userwr;
         }
 
-        public Task SetEmailConfirmedAsync(TUser user, bool confirmed)
+        public Task SetEmailConfirmedAsync(TUser user, bool confirmed, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             this.ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             user.EmailConfirmed = confirmed;
             return Task.FromResult<int>(0);
         }
 
-        public Task SetLockoutEnabledAsync(TUser user, bool enabled)
+        public Task SetLockoutEnabledAsync(TUser user, bool enabled, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             user.LockoutEnabled = enabled;
             return Task.FromResult<int>(0);
         }
 
-        public Task SetLockoutEndDateAsync(TUser user, DateTimeOffset lockoutEnd)
+        public Task SetLockoutEndDateAsync(TUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             this.ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
-            user.LockoutEndDateUtc = (lockoutEnd == DateTimeOffset.MinValue) ? null : new DateTime?(lockoutEnd.UtcDateTime);
+            user.LockoutEndDateUtc = (lockoutEnd == DateTimeOffset.MinValue) ? null : lockoutEnd?.UtcDateTime;
             return Task.FromResult<int>(0);
         }
 
-        public Task SetPasswordHashAsync(TUser user, string passwordHash)
+        public Task SetPasswordHashAsync(TUser user, string passwordHash, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
             
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             user.PasswordHash = passwordHash;
             return Task.FromResult<int>(0);
         }
 
-        public Task SetPhoneNumberAsync(TUser user, string phoneNumber)
+        public Task SetPhoneNumberAsync(TUser user, string phoneNumber, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             user.PhoneNumber = phoneNumber;
             return Task.FromResult<int>(0);
         }
 
-        public Task SetPhoneNumberConfirmedAsync(TUser user, bool confirmed)
+        public Task SetPhoneNumberConfirmedAsync(TUser user, bool confirmed, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             user.PhoneNumberConfirmed = confirmed;
             return Task.FromResult<int>(0);
         }
 
-        public Task SetSecurityStampAsync(TUser user, string stamp)
+        public Task SetSecurityStampAsync(TUser user, string stamp, CancellationToken cancellationToken = default(CancellationToken))
         {
-            this.ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             user.SecurityStamp = stamp;
             return Task.FromResult<int>(0);
         }
 
-        public Task SetTwoFactorEnabledAsync(TUser user, bool enabled)
+        public Task SetTwoFactorEnabledAsync(TUser user, bool enabled, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             this.ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
             user.TwoFactorEnabled = enabled;
             return Task.FromResult<int>(0);
@@ -945,35 +1232,45 @@ namespace ElCamino.AspNet.Identity.Dynamo
             }
         }
 
-        public async virtual Task UpdateAsync(TUser user)
+        public virtual async Task<IdentityResult> UpdateAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
-            //Change user name on roles, logins and claims, if different
-            var itemUpdates = CreateUserNameUpdateRequests(user, user.UserName);
-            List<Task> tasks = new List<Task>(itemUpdates.Count + 1);
 
-            if (itemUpdates.Count > 0) //Only attempt username change if any differences found.
+            try
             {
-                foreach (var updRequest in itemUpdates)
+                //Change user name on roles, logins and claims, if different
+                var itemUpdates = CreateUserNameUpdateRequests(user, user.UserName);
+                List<Task> tasks = new List<Task>(itemUpdates.Count + 1);
+
+                if (itemUpdates.Count > 0) // Only attempt username change if any differences found.
                 {
-                    updRequest.TableName = Context.FormatTableNameWithPrefix(Constants.TableNames.UsersTable);
-                    tasks.Add(Context.Client.UpdateItemAsync(updRequest));
+                    foreach (var updRequest in itemUpdates)
+                    {
+                        updRequest.TableName = Context.FormatTableNameWithPrefix(Constants.TableNames.UsersTable);
+                        tasks.Add(Context.Client.UpdateItemAsync(updRequest));
+                    }
                 }
-            }
-            tasks.Add(Context.SaveAsync<TUser>(user, new DynamoDBOperationConfig()
-            {
-                TableNamePrefix = this.Context.TablePrefix,
-                ConsistentRead = true
-            }));
+                tasks.Add(Context.SaveAsync<TUser>(user, new DynamoDBOperationConfig()
+                {
+                    TableNamePrefix = this.Context.TablePrefix,
+                    ConsistentRead = true
+                }, cancellationToken));
 
-            await Task.WhenAll(tasks);
-            user.Roles.ToList().ForEach(r => r.UserName = user.UserName);
-            user.Claims.ToList().ForEach(c => c.UserName = user.UserName);
-            user.Logins.ToList().ForEach(l => l.UserName = user.UserName);
+                await Task.WhenAll(tasks);
+                user.Roles.ToList().ForEach(r => r.UserName = user.UserName);
+                user.Claims.ToList().ForEach(c => c.UserName = user.UserName);
+                user.Logins.ToList().ForEach(l => l.UserName = user.UserName);
+                return IdentityResult.Success;
+            }
+            catch (Exception ex)
+            {
+                return IdentityResult.Failed(new IdentityError() { Code = "003", Description = $"User Update Failed. {ex.Message}, {ex.StackTrace}" });
+            }
         }
 
         /// <summary>
@@ -1025,9 +1322,6 @@ namespace ElCamino.AspNet.Identity.Dynamo
             userwr.Key = key;
             return userwr;
         }
-
-
-        public IdentityCloudContext<TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim> Context { get; private set; }
 
 
         public IQueryable<TUser> Users

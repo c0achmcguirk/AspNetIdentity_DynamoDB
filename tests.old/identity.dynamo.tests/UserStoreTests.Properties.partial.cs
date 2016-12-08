@@ -1,14 +1,18 @@
 ﻿// MIT License Copyright 2014 (c) David Melendez. All rights reserved. See License.txt in the project root for license information.
-using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ElCamino.AspNet.Identity.Dynamo;
-using Microsoft.AspNet.Identity;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Linq;
-using ElCamino.AspNet.Identity.Dynamo.Model;
+using System;
 
+#if net45
+using Microsoft.AspNet.Identity;
+#else
+
+#endif
+
+#if net45
 namespace ElCamino.AspNet.Identity.Dynamo.Tests
+#else
+namespace ElCamino.AspNetCore.Identity.Dynamo.Tests
+#endif
 {
     public partial class UserStoreTests
     {

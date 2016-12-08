@@ -35,6 +35,5 @@ namespace ElCamino.AspNet.Identity.Dynamo.Model
 
         [JsonProperty("tablePrefix")]
         public string TablePrefix { get; set; }
-
     }
 }

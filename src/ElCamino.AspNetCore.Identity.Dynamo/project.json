@@ -1,7 +1,7 @@
 ﻿{
   "version": "3.0.0-alpha1",
   "title": "ElCamino.AspNet.Identity.Dynamo v2",
-  "description": "DynamoDB Storage Provider for ASP.NET Core Identity 1.0 framework. Does NOT work with projects targeting the .NET 4.5+ framework.",
+  "description": "DynamoDB Storage Provider for ASP.NET Core Identity 1.0 framework. To use target .NET 4.6.2 framework, .NET Standard 1.5, or .NET Core 1.0",
   "language": "en-US",
   "authors": [
     "David Melendez",
@@ -21,33 +21,18 @@
       "url": "git://github.com/c0achmcguirk/AspNetIdentity_DynamoDB"
     }
   },
-  "buildOptions": {
-    "compile": [
-      "**/*.cs"
-    ]
-  },
   "dependencies": {
+    "Microsoft.AspNetCore.Identity": "1.1.0",
+    "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
+    "NETStandard.Library": "1.6.1",
     "AWSSDK.Core": "3.2.8-rc",
     "AWSSDK.DynamoDBv2": "3.2.8-rc",
-    "Microsoft.AspNetCore.Identity": "1.0.0",
-    "Microsoft.Extensions.DependencyInjection": "1.0.0",
-    "NETStandard.Library": "1.6.0",
-    "Newtonsoft.Json": "9.0.2-beta1",
-    "System.Linq.Queryable": "4.0.1",
+    "Microsoft.Extensions.DependencyInjection": "1.1.0",
+    "Newtonsoft.Json": "9.0.1",
+    "System.Linq.Queryable": "4.3.0",
     "System.Xml.XDocument": "4.3.0"
   },
   "frameworks": {
-    "netstandard1.3": {
-      "imports": [
-        "dotnet5.6",
-        "dnxcore50",
-        "portable-net451+win8"
-      ],
-      "buildOptions": {
-        "define": [
-          "netstandard"
-        ]
-      }
-    }
+    "netstandard1.5": {}
   }
 }

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElCamino.AspNet.Identity.Dynamo.Tests", "tests\identity.dynamo.tests\ElCamino.AspNet.Identity.Dynamo.Tests.csproj", "{803030D9-4E95-4C36-8813-A35194D805EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElCamino.AspNet.Identity.Dynamo.Tests", "tests\ElCamino.AspNetcore.Identity.Dynamo.IntegrationTests\ElCamino.AspNetcore.Identity.Dynamo.IntegrationTests.csproj", "{803030D9-4E95-4C36-8813-A35194D805EC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DADDF548-A8E8-4D29-AEA7-52D2BE0F5024}"
 	ProjectSection(SolutionItems) = preProject
@@ -12,11 +12,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElCamino.AspNet.Identity.Dynamo.UnitTests", "ElCamino.AspNet.Identity.Dynamo.UnitTests\ElCamino.AspNet.Identity.Dynamo.UnitTests.csproj", "{299E6124-8025-41EF-B7B0-4DAB7ACC51AC}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ElCamino.AspNet.Identity.TestAppsettings", "src\ElCamino.AspNet.Identity.TestAppsettings\ElCamino.AspNet.Identity.TestAppsettings.xproj", "{B271F843-26B8-4010-9DF6-9B6AABD86CE2}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ElCamino.AspNet.Identity.TestAppsettings", "ElCamino.AspNet.Identity.TestAppsettings\ElCamino.AspNet.Identity.TestAppsettings.xproj", "{B271F843-26B8-4010-9DF6-9B6AABD86CE2}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ElCamino.AspNetCore.Identity.Dynamo", "ElCamino.AspNetCore.Identity.Dynamo\ElCamino.AspNetCore.Identity.Dynamo.xproj", "{747DDB95-C5ED-4413-89FA-39C9F887DE9D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElCamino.AspNetCore.Identity.Dynamo", "src\ElCamino.AspNetCore.Identity.Dynamo\ElCamino.AspNetCore.Identity.Dynamo.csproj", "{5CAC9772-0944-450C-BCB8-98ABD10C1B2E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,24 +29,18 @@ Global
 		{803030D9-4E95-4C36-8813-A35194D805EC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{803030D9-4E95-4C36-8813-A35194D805EC}.Signed|Any CPU.ActiveCfg = Signed|Any CPU
 		{803030D9-4E95-4C36-8813-A35194D805EC}.Signed|Any CPU.Build.0 = Signed|Any CPU
-		{299E6124-8025-41EF-B7B0-4DAB7ACC51AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{299E6124-8025-41EF-B7B0-4DAB7ACC51AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{299E6124-8025-41EF-B7B0-4DAB7ACC51AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{299E6124-8025-41EF-B7B0-4DAB7ACC51AC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{299E6124-8025-41EF-B7B0-4DAB7ACC51AC}.Signed|Any CPU.ActiveCfg = Release|Any CPU
-		{299E6124-8025-41EF-B7B0-4DAB7ACC51AC}.Signed|Any CPU.Build.0 = Release|Any CPU
 		{B271F843-26B8-4010-9DF6-9B6AABD86CE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B271F843-26B8-4010-9DF6-9B6AABD86CE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B271F843-26B8-4010-9DF6-9B6AABD86CE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B271F843-26B8-4010-9DF6-9B6AABD86CE2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B271F843-26B8-4010-9DF6-9B6AABD86CE2}.Signed|Any CPU.ActiveCfg = Debug|Any CPU
 		{B271F843-26B8-4010-9DF6-9B6AABD86CE2}.Signed|Any CPU.Build.0 = Debug|Any CPU
-		{747DDB95-C5ED-4413-89FA-39C9F887DE9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{747DDB95-C5ED-4413-89FA-39C9F887DE9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{747DDB95-C5ED-4413-89FA-39C9F887DE9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{747DDB95-C5ED-4413-89FA-39C9F887DE9D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{747DDB95-C5ED-4413-89FA-39C9F887DE9D}.Signed|Any CPU.ActiveCfg = Debug|Any CPU
-		{747DDB95-C5ED-4413-89FA-39C9F887DE9D}.Signed|Any CPU.Build.0 = Debug|Any CPU
+		{5CAC9772-0944-450C-BCB8-98ABD10C1B2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CAC9772-0944-450C-BCB8-98ABD10C1B2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CAC9772-0944-450C-BCB8-98ABD10C1B2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CAC9772-0944-450C-BCB8-98ABD10C1B2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CAC9772-0944-450C-BCB8-98ABD10C1B2E}.Signed|Any CPU.ActiveCfg = Release|Any CPU
+		{5CAC9772-0944-450C-BCB8-98ABD10C1B2E}.Signed|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

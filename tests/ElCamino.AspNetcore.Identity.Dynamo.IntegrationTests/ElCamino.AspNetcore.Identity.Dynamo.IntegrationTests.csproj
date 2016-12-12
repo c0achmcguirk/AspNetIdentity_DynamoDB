@@ -285,7 +285,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ExceptionHelper.cs" />
-    <Compile Include="HelperTests\KeyHelperTests.cs" />
     <Compile Include="ModelTests\IdentityCloudContextFake.cs" />
     <Compile Include="ModelTests\IdentityUserTests.cs" />
     <Compile Include="ModelTests\IdentityCloudContextTests.cs" />

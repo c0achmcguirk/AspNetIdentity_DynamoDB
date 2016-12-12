@@ -16,8 +16,11 @@ namespace ElCamino.AspNetCore.Identity.Dynamo
         public IdentityCloudContext() : base(new IdentityDynamoOptions())
         { }
 
-        public IdentityCloudContext(IdentityDynamoOptions config) :
-            base(config) { }
+        public IdentityCloudContext(IdentityDynamoOptions options) :
+            base(options) { }
+
+        public IdentityCloudContext(IdentityDynamoOptions options, IAmazonDynamoDB dbClient) :
+            base(options, dbClient) { }
 
     }
 
@@ -26,12 +29,35 @@ namespace ElCamino.AspNetCore.Identity.Dynamo
         public IdentityCloudContext() : base(new IdentityDynamoOptions())
         { }
 
-        public IdentityCloudContext(IdentityDynamoOptions config) 
-           : base(config) { }
+        public IdentityCloudContext(IdentityDynamoOptions options) 
+           : base(options) { }
+
+        public IdentityCloudContext(IdentityDynamoOptions options, IAmazonDynamoDB dbClient) 
+           : base(options, dbClient) { }
     }
 
-    public class IdentityCloudContext<TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim>  : DynamoDBContext
-        where TUser : IdentityUser<TKey, TUserLogin, TUserRole, TUserClaim>
+    public interface IIdentityCloudContext
+    {
+        AmazonDynamoDBClient Client { get; }
+        string TablePrefix { get; }
+        Dictionary<Type, IPropertyConverter> ConverterCache { get; }
+        string FormatTableNameWithPrefix(string tableName);
+
+        CreateTableRequest GenerateUserCreateTableRequest(string tableName, 
+            string userEmailIndex,
+            string userNameIndex);
+
+        Task CreateUserTableAsync();
+        Task<DeleteTableResponse> DeleteTableAsync(string tableName);
+        CreateTableRequest GenerateRoleCreateTableRequest(string tableName);
+        Task CreateRoleTableAsync();
+        CreateTableRequest GenerateIndexCreateTableRequest(string tableName);
+        Task CreateIndexTableAsync();
+        Task CreateTableAsync(CreateTableRequest request);
+        void Dispose();
+    }
+
+    public class IdentityCloudContext<TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim>  : DynamoDBContext, IIdentityCloudContext where TUser : IdentityUser<TKey, TUserLogin, TUserRole, TUserClaim>
         where TRole : IdentityRole<TKey, TUserRole>
         where TUserLogin : IdentityUserLogin<TKey>
         where TUserRole : IdentityUserRole<TKey>
@@ -39,7 +65,7 @@ namespace ElCamino.AspNetCore.Identity.Dynamo
     {
         private AmazonDynamoDBClient _client;
         protected bool _disposed = false;
-        private IdentityDynamoOptions _config = null;
+        private IdentityDynamoOptions _options = null;
 
 
         public AmazonDynamoDBClient Client
@@ -51,19 +77,24 @@ namespace ElCamino.AspNetCore.Identity.Dynamo
         {
             get
             {
-                if (!string.IsNullOrWhiteSpace(_config.TablePrefix))
+                if (!string.IsNullOrWhiteSpace(_options.TablePrefix))
                 {
-                    return _config.TablePrefix;
+                    return _options.TablePrefix;
                 }
                 return string.Empty;
             }
         }
 
-
-        public IdentityCloudContext(IdentityDynamoOptions config) : base(new AmazonDynamoDBClient())
+        public IdentityCloudContext(IdentityDynamoOptions options, IAmazonDynamoDB dbClient) : base(dbClient)
         {
-            this._config = config;
-            Initialize(config);
+            this._options = options;
+            Initialize(options);
+        }
+
+        public IdentityCloudContext(IdentityDynamoOptions options) : base(new AmazonDynamoDBClient())
+        {
+            this._options = options;
+            Initialize(options);
         }
 
         public string FormatTableNameWithPrefix(string tableName)
@@ -71,15 +102,20 @@ namespace ElCamino.AspNetCore.Identity.Dynamo
             return TablePrefix + tableName;
         }
 
-        private void Initialize(IdentityDynamoOptions config)
+        private void Initialize(IdentityDynamoOptions options)
         {
-            _config = config;
+            _options = options;
             var dbConfig = new AmazonDynamoDBConfig();
-            dbConfig.AuthenticationRegion = config.AuthenticationRegion;
-            dbConfig.LogMetrics = config.LogMetrics ?? false;
-            dbConfig.LogResponse = config.LogResponse ?? false;
-            dbConfig.BufferSize = config.BufferSize;
-            dbConfig.ServiceURL = config.ServiceUrl;
+            dbConfig.AuthenticationRegion = options.AuthenticationRegion;
+            dbConfig.LogMetrics = options.LogMetrics ?? false;
+            dbConfig.LogResponse = options.LogResponse ?? false;
+            dbConfig.BufferSize = options.BufferSize;
+            dbConfig.ServiceURL = options.ServiceUrl;
+            SetUpClient(dbConfig);
+        }
+
+        protected virtual void SetUpClient(AmazonDynamoDBConfig dbConfig)
+        {
             _client = new AmazonDynamoDBClient(dbConfig);
         }
 
@@ -281,7 +317,7 @@ namespace ElCamino.AspNetCore.Identity.Dynamo
                 if (!tableExists)
                 {
                     var response = await _client.CreateTableAsync(request);
-                    await WaitTillTableCreated(request.TableName, response);
+                    await WaitUntilTableCreatedAsync(request.TableName, response);
                 }
             });
         }
@@ -297,7 +333,13 @@ namespace ElCamino.AspNetCore.Identity.Dynamo
         }
 
 
-        protected async Task WaitTillTableCreated(string tableName, CreateTableResponse response)
+        /// <summary>
+        /// Creates the table and waits for it to be completed on the server before returning.
+        /// </summary>
+        /// <param name="tableName">The table you want created.</param>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        protected async Task WaitUntilTableCreatedAsync(string tableName, CreateTableResponse response)
         {
             var tableDescription = response.TableDescription;
 
@@ -322,6 +364,7 @@ namespace ElCamino.AspNetCore.Identity.Dynamo
                 // Try-catch to handle potential eventual-consistency issue.
                 catch (ResourceNotFoundException) { throw; }
             }
+            return;
         }
 
     }

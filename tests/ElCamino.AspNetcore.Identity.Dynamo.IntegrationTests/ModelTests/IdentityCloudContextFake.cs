@@ -17,7 +17,7 @@ namespace ElCamino.AspNet.Identity.Dynamo.Tests.ModelTests
 
         public async Task WaitTillTableCreatedTestHelper()
         {
-            await WaitTillTableCreated("TableNotFound",
+            await WaitUntilTableCreatedAsync("TableNotFound",
                 new Amazon.DynamoDBv2.Model.CreateTableResponse()
                 {
                     TableDescription = new Amazon.DynamoDBv2.Model.TableDescription()
@@ -35,7 +35,7 @@ namespace ElCamino.AspNet.Identity.Dynamo.Tests.ModelTests
                 table));
             createTask.Wait();
 
-            await WaitTillTableCreated(table,
+            await WaitUntilTableCreatedAsync(table,
                 new Amazon.DynamoDBv2.Model.CreateTableResponse()
                 {
                     TableDescription = new Amazon.DynamoDBv2.Model.TableDescription()

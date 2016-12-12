@@ -4,7 +4,6 @@ using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
-using ElCamino.AspNetCore.Identity.Dynamo;
 using ElCamino.AspNetCore.Identity.Dynamo.Helpers;
 using ElCamino.AspNetCore.Identity.Dynamo.Model;
 using Microsoft.AspNetCore.Identity;
@@ -81,6 +80,7 @@ namespace ElCamino.AspNetCore.Identity.Dynamo
         where TUserClaim : IdentityUserClaim<TKey>, new()
         where TContext : IdentityCloudContext, new()
     {
+        private const string VALUE_CANT_BE_EMPTY = "Value cannot be empty";
         private bool _disposed;
         private IQueryable<TUser> _users;
 
@@ -241,7 +241,7 @@ namespace ElCamino.AspNetCore.Identity.Dynamo
             }
             if (string.IsNullOrWhiteSpace(roleName))
             {
-                throw new ArgumentException(IdentityResources.ValueCannotBeNullOrEmpty, nameof(roleName));
+                throw new ArgumentException(VALUE_CANT_BE_EMPTY, nameof(roleName));
             }
 
             TRole roleT = Activator.CreateInstance<TRole>();
@@ -408,7 +408,7 @@ namespace ElCamino.AspNetCore.Identity.Dynamo
             this.ThrowIfDisposed();
             if (string.IsNullOrWhiteSpace(email))
             {
-                throw new ArgumentException(IdentityResources.ValueCannotBeNullOrEmpty, "email");
+                throw new ArgumentException(VALUE_CANT_BE_EMPTY, "email");
             }
 
             return await Context.Client.QueryAsync(new QueryRequest()
@@ -445,7 +445,7 @@ namespace ElCamino.AspNetCore.Identity.Dynamo
             this.ThrowIfDisposed();
             if (string.IsNullOrWhiteSpace(email))
             {
-                throw new ArgumentException(IdentityResources.ValueCannotBeNullOrEmpty, "email");
+                throw new ArgumentException(VALUE_CANT_BE_EMPTY, "email");
             }
 
             return await Context.Client.QueryAsync(new QueryRequest()
@@ -482,7 +482,7 @@ namespace ElCamino.AspNetCore.Identity.Dynamo
             }
             if (string.IsNullOrWhiteSpace(userId))
             {
-                throw new ArgumentException(IdentityResources.ValueCannotBeNullOrEmpty, nameof(userId));
+                throw new ArgumentException(VALUE_CANT_BE_EMPTY, nameof(userId));
             }
 
 
@@ -782,7 +782,7 @@ namespace ElCamino.AspNetCore.Identity.Dynamo
             }
             if (string.IsNullOrWhiteSpace(roleName))
             {
-                throw new ArgumentException(IdentityResources.ValueCannotBeNullOrEmpty, nameof(roleName));
+                throw new ArgumentException(VALUE_CANT_BE_EMPTY, nameof(roleName));
             }
 
             return Task.FromResult<bool>(user.Roles.Any(r=> r.Id.ToString() == KeyHelper.GenerateRowKeyIdentityUserRole(roleName)));
@@ -810,7 +810,7 @@ namespace ElCamino.AspNetCore.Identity.Dynamo
             {
                 if (string.IsNullOrWhiteSpace(claim.Type))
                 {
-                    throw new ArgumentException(IdentityResources.ValueCannotBeNullOrEmpty, "claim.Type");
+                    throw new ArgumentException(VALUE_CANT_BE_EMPTY, "claim.Type");
                 }
 
                 // Claim ctor doesn't allow Claim.Value to be null. Need to allow string.empty.
@@ -849,7 +849,7 @@ namespace ElCamino.AspNetCore.Identity.Dynamo
 
             if (string.IsNullOrWhiteSpace(claim.Type))
             {
-                throw new ArgumentException(IdentityResources.ValueCannotBeNullOrEmpty, "claim.Type");
+                throw new ArgumentException(VALUE_CANT_BE_EMPTY, "claim.Type");
             }
 
             // Claim ctor doesn't allow Claim.Value to be null. Need to allow string.empty.
@@ -877,7 +877,7 @@ namespace ElCamino.AspNetCore.Identity.Dynamo
             }
             if (string.IsNullOrWhiteSpace(roleName))
             {
-                throw new ArgumentException(IdentityResources.ValueCannotBeNullOrEmpty, nameof(roleName));
+                throw new ArgumentException(VALUE_CANT_BE_EMPTY, nameof(roleName));
             }
             var item = user.Roles.FirstOrDefault<TUserRole>(r => r.Id.ToString() == KeyHelper.GenerateRowKeyIdentityUserRole(roleName));
             if (item != null)
@@ -1326,7 +1326,6 @@ namespace ElCamino.AspNetCore.Identity.Dynamo
             userwr.Key = key;
             return userwr;
         }
-
 
         public IQueryable<TUser> Users
         {

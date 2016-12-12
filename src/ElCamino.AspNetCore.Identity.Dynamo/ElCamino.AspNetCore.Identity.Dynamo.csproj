@@ -33,12 +33,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\ElCamino.AspNetCore.Identity.Dynamo.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
     <Content Include="Diagrams\ModelClasses.cd" />
     <Content Include="Diagrams\StoreClasses.cd" />
-    <Content Include="ElCamino.AspNet.Identity.Dynamo.nuspec" />
     <Content Include="NoPassword.snk" />
     <Content Include="project.json" />
     <Content Include="project.lock.json">
@@ -64,6 +64,9 @@
     <Compile Include="RoleStore.cs" />
     <Compile Include="UserStore.Core.partial.cs" />
     <Compile Include="UserStore.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ElCamino.AspNetCore.Identity.Dynamo.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

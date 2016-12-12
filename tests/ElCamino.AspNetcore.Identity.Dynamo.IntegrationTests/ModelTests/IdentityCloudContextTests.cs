@@ -1,26 +1,26 @@
 ﻿// MIT License Copyright 2014 (c) David Melendez. All rights reserved. See License.txt in the project root for license information.
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ElCamino.AspNet.Identity.Dynamo.Model;
-using System.Resources;
-using Amazon.Runtime;
-using Amazon.DynamoDBv2.Model;
-using System.Threading;
-using System.Configuration;
-using ElCamino.AspNet.Identity.Dynamo.Configuration;
 using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.Model;
+using Amazon.Runtime;
+using ElCamino.AspNetCore.Identity.Dynamo;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Configuration;
+using System.Threading;
+using System.Threading.Tasks;
+using ElCamino.AspNetCore.Identity.Dynamo.Model;
 
 namespace ElCamino.AspNet.Identity.Dynamo.Tests.ModelTests
 {
     [TestClass]
     public class IdentityCloudContextTests
     {
+        /*
         [TestMethod]
         [TestCategory("Identity.Dynamo.Model")]
         public void IdentityCloudContextCtors()
         {
-            string strValidConnection = 
-                ConfigurationManager.ConnectionStrings[ElCamino.AspNet.Identity.Dynamo.Constants.AppSettingsKeys.DefaultStorageConnectionStringKey].ConnectionString;
+            string strValidConnection = ConfigurationManager.ConnectionStrings[AspNetCore.Identity.Dynamo.Constants.AppSettingsKeys.DefaultStorageConnectionStringKey].ConnectionString;
             var currentConfig = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             var section = currentConfig.Sections[IdentityConfigurationSection.Name];
             if (section == null)
@@ -165,22 +165,20 @@ namespace ElCamino.AspNet.Identity.Dynamo.Tests.ModelTests
                 i2 = new IdentityCloudContext<IdentityUser, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>(string.Empty);
             }
             catch (AmazonClientException) { }
-        }
+        }*/
 
         [TestMethod]
         [TestCategory("Identity.Dynamo.Model")]
-        public void CreateUserTableTest()
+        public async Task CreateUserTableTest()
         {
             using (var ic = new IdentityCloudContext())
             {
                 string table = "UserTable123";
-                var createTask = ic.CreateTableAsync(ic.GenerateUserCreateTableRequest(
+                await ic.CreateTableAsync(ic.GenerateUserCreateTableRequest(
                     table, "UserEmailIndex123", "UserNameIndex123"));
-                createTask.Wait();
 
                 Thread.Sleep(500);
-                var deleteTask = ic.DeleteTableAsync(table);
-                deleteTask.Wait();
+                await ic.DeleteTableAsync(table);
             }
         }
 

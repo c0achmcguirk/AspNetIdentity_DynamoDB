@@ -1,20 +1,13 @@
 ﻿// MIT License Copyright 2014 (c) David Melendez. All rights reserved. See License.txt in the project root for license information.
+using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.Model;
+using ElCamino.AspNet.Identity.Dynamo.Configuration;
+using ElCamino.AspNetCore.Identity.Dynamo.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Amazon;
-#if net45
-using ElCamino.AspNet.Identity.Dynamo.Model;
-#else
-using ElCamino.AspNetCore.Identity.Dynamo.Model;
-#endif
-using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DocumentModel;
-using Amazon.DynamoDBv2.Model;
-using ElCamino.AspNet.Identity.Dynamo.Configuration;
 
 namespace ElCamino.AspNetCore.Identity.Dynamo
 {
@@ -288,7 +281,7 @@ namespace ElCamino.AspNetCore.Identity.Dynamo
                 if (!tableExists)
                 {
                     var response = await _client.CreateTableAsync(request);
-                    WaitTillTableCreated(request.TableName, response);
+                    await WaitTillTableCreated(request.TableName, response);
                 }
             });
         }

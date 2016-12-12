@@ -302,6 +302,12 @@
   <ItemGroup>
     <Analyzer Include="..\..\packages\AWSSDK.DynamoDBv2.3.2.8-rc\analyzers\dotnet\cs\AWSSDK.DynamoDBv2.CodeAnalysis.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ElCamino.AspNetCore.Identity.Dynamo\ElCamino.AspNetCore.Identity.Dynamo.csproj">
+      <Project>{5CAC9772-0944-450C-BCB8-98ABD10C1B2E}</Project>
+      <Name>ElCamino.AspNetCore.Identity.Dynamo</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

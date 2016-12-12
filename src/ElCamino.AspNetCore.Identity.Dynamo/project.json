@@ -1,5 +1,5 @@
 ﻿{
-  "version": "3.0.0-alpha1",
+  "version": "3.0.0-alpha3",
   "title": "ElCamino.AspNet.Identity.Dynamo v2",
   "description": "DynamoDB Storage Provider for ASP.NET Core Identity 1.0 framework. To use target .NET 4.6.2 framework, .NET Standard 1.5, or .NET Core 1.0",
   "language": "en-US",
@@ -21,6 +21,11 @@
       "url": "git://github.com/c0achmcguirk/AspNetIdentity_DynamoDB"
     }
   },
+  "supports": {
+    "net462.app": {},
+    "netcoreapp1.0.app": {},
+    "netstandard1.5.app": {}
+  },
   "dependencies": {
     "Microsoft.AspNetCore.Identity": "1.1.0",
     "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
@@ -30,7 +35,8 @@
     "Microsoft.Extensions.DependencyInjection": "1.1.0",
     "Newtonsoft.Json": "9.0.1",
     "System.Linq.Queryable": "4.3.0",
-    "System.Xml.XDocument": "4.3.0"
+    "System.Xml.XDocument": "4.3.0",
+    "System.Runtime": "4.1.0"
   },
   "frameworks": {
     "netstandard1.5": {}

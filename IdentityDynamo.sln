@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElCamino.AspNet.Identity.Dynamo.Tests", "tests\ElCamino.AspNetcore.Identity.Dynamo.IntegrationTests\ElCamino.AspNetcore.Identity.Dynamo.IntegrationTests.csproj", "{803030D9-4E95-4C36-8813-A35194D805EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElCamino.AspNetcore.Identity.Dynamo.IntegrationTests", "tests\ElCamino.AspNetcore.Identity.Dynamo.IntegrationTests\ElCamino.AspNetcore.Identity.Dynamo.IntegrationTests.csproj", "{803030D9-4E95-4C36-8813-A35194D805EC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DADDF548-A8E8-4D29-AEA7-52D2BE0F5024}"
 	ProjectSection(SolutionItems) = preProject
@@ -12,9 +12,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ElCamino.AspNet.Identity.TestAppsettings", "src\ElCamino.AspNet.Identity.TestAppsettings\ElCamino.AspNet.Identity.TestAppsettings.xproj", "{B271F843-26B8-4010-9DF6-9B6AABD86CE2}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ElCamino.AspNetCore.Identity.TestAppsettings", "tests\ElCamino.AspNetCore.Identity.TestAppsettings\ElCamino.AspNetCore.Identity.TestAppsettings.xproj", "{B271F843-26B8-4010-9DF6-9B6AABD86CE2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElCamino.AspNetCore.Identity.Dynamo", "src\ElCamino.AspNetCore.Identity.Dynamo\ElCamino.AspNetCore.Identity.Dynamo.csproj", "{5CAC9772-0944-450C-BCB8-98ABD10C1B2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElCamino.AspNetCore.Identity.UnitTests", "tests\ElCamino.AspNetCore.Identity.UnitTests\ElCamino.AspNetCore.Identity.UnitTests.csproj", "{331F1C29-EA50-4894-B246-47F5D8788709}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,12 @@ Global
 		{5CAC9772-0944-450C-BCB8-98ABD10C1B2E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5CAC9772-0944-450C-BCB8-98ABD10C1B2E}.Signed|Any CPU.ActiveCfg = Release|Any CPU
 		{5CAC9772-0944-450C-BCB8-98ABD10C1B2E}.Signed|Any CPU.Build.0 = Release|Any CPU
+		{331F1C29-EA50-4894-B246-47F5D8788709}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{331F1C29-EA50-4894-B246-47F5D8788709}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{331F1C29-EA50-4894-B246-47F5D8788709}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{331F1C29-EA50-4894-B246-47F5D8788709}.Release|Any CPU.Build.0 = Release|Any CPU
+		{331F1C29-EA50-4894-B246-47F5D8788709}.Signed|Any CPU.ActiveCfg = Release|Any CPU
+		{331F1C29-EA50-4894-B246-47F5D8788709}.Signed|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

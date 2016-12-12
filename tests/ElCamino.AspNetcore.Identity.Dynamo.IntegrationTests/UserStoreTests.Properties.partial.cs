@@ -1,21 +1,11 @@
 ﻿// MIT License Copyright 2014 (c) David Melendez. All rights reserved. See License.txt in the project root for license information.
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
-#if net45
-using Microsoft.AspNet.Identity;
-#else
-
-#endif
-
-#if net45
-namespace ElCamino.AspNet.Identity.Dynamo.Tests
-#else
 namespace ElCamino.AspNetCore.Identity.Dynamo.Tests
-#endif
 {
     public partial class UserStoreTests
     {
+
+        /*
         [TestMethod]
         [TestCategory("Identity.Dynamo.UserStore.Properties")]
         public void AccessFailedCount()
@@ -577,6 +567,6 @@ namespace ElCamino.AspNetCore.Identity.Dynamo.Tests
                 }
             }
         }
-
+        */
     }
 }

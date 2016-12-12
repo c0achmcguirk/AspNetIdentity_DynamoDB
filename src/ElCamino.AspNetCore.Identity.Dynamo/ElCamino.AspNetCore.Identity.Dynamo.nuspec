@@ -24,16 +24,29 @@
     </releaseNotes> 
     <copyright>Copyright 2016</copyright>
     <tags>ASP.NET Core Identity 1.0 AWS Amazon DynamoDB MVC UserStore RoleStore UserManager RoleManager multi-tenant</tags>
+  
     <dependencies>
-      <dependency id="AWSSDK.Core" version="3.1.4.5" />
-      <dependency id="AWSSDK.DynamoDBv2" version="3.1.1.4" />
-      <dependency id="Microsoft.AspNetCore.Identity" version="1.0.0" />
-      <dependency id="Newtonsoft.Json" version="6.0.8" />
-      <dependency id="Microsoft.Extensions.DependencyInjection" version="1.0.0" />
-      <dependency id="NETStandard.Library" version="1.6.0" />
-      <dependency id="Newtonsoft.Json" version="9.0.2-beta1" />
-      <dependency id="System.Linq.Queryable" version="4.0.1" />
-      <dependency id="System.Xml.XDocument" version="4.3.0" />
+      <group>
+        <dependency id="AWSSDK.Core" version="3.1.4.5" />
+        <dependency id="AWSSDK.DynamoDBv2" version="3.1.1.4" />
+        <dependency id="Microsoft.AspNetCore.Identity" version="1.0.0" />
+        <dependency id="Newtonsoft.Json" version="6.0.8" />
+        <dependency id="Microsoft.Extensions.DependencyInjection" version="1.0.0" />
+        <dependency id="NETStandard.Library" version="1.6.0" />
+        <dependency id="Newtonsoft.Json" version="9.0.2-beta1" />
+        <dependency id="System.Linq.Queryable" version="4.0.1" />
+        <dependency id="System.Xml.XDocument" version="4.3.0" />
+      </group>
+      <group targetFramework="net462" />
+      <group targetFramework="netstandard1.5" />
+      <group targetFramework="netcoreapp1.0" />
     </dependencies>
+
+    <files>
+      <file src="bin\Release\$id$.*" target="lib\net462\" />
+      <file src="bin\Release\$id$.*" target="lib\netstandard1.5\" />
+      <file src="bin\Release\$id$.*" target="lib\netcoreapp1.0\" />
+    </files>
+
   </metadata>
 </package>

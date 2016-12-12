@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ElCamino.AspNetCore.Identity.Dynamo;
 
 namespace ElCamino.AspNet.Identity.Dynamo.Tests.ModelTests
 {
@@ -14,9 +15,9 @@ namespace ElCamino.AspNet.Identity.Dynamo.Tests.ModelTests
             Dispose(false);          
         }
 
-        public void WaitTillTableCreatedTestHelper()
+        public async Task WaitTillTableCreatedTestHelper()
         {
-            WaitTillTableCreated("TableNotFound",
+            await WaitTillTableCreated("TableNotFound",
                 new Amazon.DynamoDBv2.Model.CreateTableResponse()
                 {
                     TableDescription = new Amazon.DynamoDBv2.Model.TableDescription()
@@ -27,14 +28,14 @@ namespace ElCamino.AspNet.Identity.Dynamo.Tests.ModelTests
                 });
         }
 
-        public void WaitTillTableCreatedTestHelper2()
+        public async Task WaitTillTableCreatedTestHelper2()
         {
             string table = "RoleTable" + Guid.NewGuid().ToString("N") ;
             var createTask = CreateTableAsync(GenerateRoleCreateTableRequest(
                 table));
             createTask.Wait();
 
-            WaitTillTableCreated(table,
+            await WaitTillTableCreated(table,
                 new Amazon.DynamoDBv2.Model.CreateTableResponse()
                 {
                     TableDescription = new Amazon.DynamoDBv2.Model.TableDescription()

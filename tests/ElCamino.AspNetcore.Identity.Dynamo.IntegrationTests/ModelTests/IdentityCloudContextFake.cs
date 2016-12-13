@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using ElCamino.AspNetCore.Identity.Dynamo;
 
-namespace ElCamino.AspNet.Identity.Dynamo.Tests.ModelTests
+namespace ElCamino.AspNetCore.Identity.Dynamo.IntegrationTests.ModelTests
 {
     public class IdentityCloudContextFake : IdentityCloudContext
     {

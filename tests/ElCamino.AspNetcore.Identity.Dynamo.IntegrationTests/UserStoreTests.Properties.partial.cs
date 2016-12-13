@@ -1,8 +1,8 @@
 ﻿// MIT License Copyright 2014 (c) David Melendez. All rights reserved. See License.txt in the project root for license information.
 
-namespace ElCamino.AspNetCore.Identity.Dynamo.Tests
+namespace ElCamino.AspNetCore.Identity.Dynamo.IntegrationTests
 {
-    public partial class UserStoreTests
+    public partial class LegacyUserStoreTests
     {
 
         /*

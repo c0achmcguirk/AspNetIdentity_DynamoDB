@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using Amazon.DynamoDBv2;
+﻿using Amazon.DynamoDBv2;
 using ElCamino.AspNet.Identity.Dynamo.Configuration;
 using ElCamino.AspNetCore.Identity.Dynamo;
 using FakeItEasy;
 using NUnit.Framework;
+using System.Linq;
 
 namespace ElCamino.AspNetCore.Identity.UnitTests
 {
@@ -69,13 +69,13 @@ namespace ElCamino.AspNetCore.Identity.UnitTests
     internal class TestableIdentityCloudContext : IdentityCloudContext
     {
         public IdentityDynamoOptions Options { get; private set; }
-        public IAmazonDynamoDB Client { get; private set; }
+        public IAmazonDynamoDB MyClient { get; private set; }
 
         public bool SetUpClientCalled = false;
 
         public TestableIdentityCloudContext(IdentityDynamoOptions options, IAmazonDynamoDB dbClient) : base(options, dbClient)
         {
-            Client = dbClient;
+            MyClient = dbClient;
             Options = options;
         }
 

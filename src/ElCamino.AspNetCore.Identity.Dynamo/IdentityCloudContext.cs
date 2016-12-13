@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ElCamino.AspNetCore.Identity.Dynamo
 {
-    public class IdentityCloudContext : IdentityCloudContext<IdentityUser, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>
+    public class IdentityCloudContext : IdentityCloudContext<IdentityUser>
     {
         public IdentityCloudContext() : base(new IdentityDynamoOptions())
         { }
@@ -310,6 +310,15 @@ namespace ElCamino.AspNetCore.Identity.Dynamo
 
         public async Task CreateTableAsync(CreateTableRequest request)
         {
+            var tableResponse = await _client.ListTablesAsync();
+            var tableExists = tableResponse.TableNames.Any(t => t == request.TableName);
+            if (!tableExists)
+            {
+                var response = await _client.CreateTableAsync(request);
+                await WaitUntilTableCreatedAsync(request.TableName, response);
+            }
+
+            /*
             await new TaskFactory().StartNew(async () =>
             {
                 var tableResponse = await _client.ListTablesAsync();
@@ -320,6 +329,7 @@ namespace ElCamino.AspNetCore.Identity.Dynamo
                     await WaitUntilTableCreatedAsync(request.TableName, response);
                 }
             });
+            */
         }
 
         protected override void Dispose(bool disposing)

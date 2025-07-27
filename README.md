@@ -1,4 +1,4 @@
-# ASP.NET Identity 2.1 AWS DynaomDB
+# ASP.NET Identity 2.1 AWS DynamoDB
 
 This is a fork of [David Melendez's project on CodePlex](https://identitydynamodb.codeplex.com). The only differences between this repository and his:
 
